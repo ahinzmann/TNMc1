@@ -22,8 +22,8 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
 
 # Run on MC or data
 
-runOnMC = True
-runPATCMG = False
+runOnMC = False
+runPATCMG = True
 recalibrateCMGJets = False
 runAK7jets = False
 runPrunedAK7jets = False
@@ -326,7 +326,9 @@ if runPATCMG:
     process.demo.buffers.remove('edmTriggerResultsHelper1')
   from CMGTools.Common.PAT.patCMGSchedule_cff import getSchedule
   process.schedule = getSchedule(process, runOnMC, False)
-  process.schedule.remove(process.trackIsolationMakerFilterPath)
+  if runOnMC:
+      process.metNoiseCleaningPath.remove(process.hcalfilter)
+      process.trackIsolationMakerFilterPath.remove(process.trackIsolationFilter)
   del process.boolToIntSequence
 
 process.tnmc1 = cms.Sequence(process.goodOfflinePrimaryVertices)

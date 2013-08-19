@@ -1,10 +1,9 @@
-chi_analysis data/fileList_HT_Run2012A-13Jul2012-v1_AOD_grid.txt chi_Moriond_Run2012A.root > chi_Moriond_Run2012A.log &
-chi_analysis data/fileList_HT_Run2012A-recover-06Aug2012-v1_AOD_grid.txt chi_Moriond_Run2012Ar.root > chi_Moriond_Run2012Ar.log &
-chi_analysis data/fileList_JetHT_Run2012B-13Jul2012-v1_AOD_grid.txt chi_Moriond_Run2012B.root > chi_Moriond_Run2012B.log &
-chi_analysis data/fileList_JetHT_Run2012C-PromptReco-v1_AOD_grid.txt chi_Moriond_Run2012C1.root > chi_Moriond_Run2012C1.log &
-chi_analysis data/fileList_JetHT_Run2012C-PromptReco-v2_AOD_grid.txt chi_Moriond_Run2012C2.root > chi_Moriond_Run2012C2.log &
-chi_analysis data/fileList_JetHT_Run2012D-PromptReco-v1_AOD_grid.txt chi_Moriond_Run2012D.root > chi_Moriond_Run2012D.log &
-chi_analysis_mc data/filelist_QCD_HT-100To250_TuneZ2star_8TeV-madgraph-pythia_Summer12-PU_S7_START52_V9-v1_AODSIM_V5_B_PAT_CMG_V5_6_0_B_NTUPLE_.txt chi_Moriond_QCD_100.root > chi_Moriond_QCD_100.log &
-chi_analysis_mc data/filelist_QCD_HT-250To500_TuneZ2star_8TeV-madgraph-pythia6_Summer12-PU_S7_START52_V9-v1_AODSIM_V5_B_PAT_CMG_V5_6_0_B_NTUPLE_.txt chi_Moriond_QCD_250.root > chi_Moriond_QCD_250.log &
-chi_analysis_mc data/filelist_QCD_HT-500To1000_TuneZ2star_8TeV-madgraph-pythia6_Summer12-PU_S7_START52_V9-v1_AODSIM_V5_B_PAT_CMG_V5_6_0_B_NTUPLE_.txt chi_Moriond_QCD_500.root > chi_Moriond_QCD_500.log &
-chi_analysis_mc data/filelist_QCD_HT-1000ToInf_TuneZ2star_8TeV-madgraph-pythia6_Summer12-PU_S7_START52_V9-v1_AODSIM_V5_B_PAT_CMG_V5_6_0_B_NTUPLE_.txt chi_Moriond_QCD_1000.root > chi_Moriond_QCD_1000.log &
+chi_analysis data/fileList_HT_Run2012A-22Jan2013-v1_AOD_NTUPLE_Aug5_grid.txt chi_ReRun2012A.root > chi_ReRun2012A.log &
+chi_analysis data/fileList_JetHT_Run2012B-22Jan2013-v1_AOD_NTUPLE_Aug5_grid.txt chi_ReRun2012B.root > chi_ReRun2012B.log &
+chi_analysis data/fileList_JetHT_Run2012C-22Jan2013-v1_AOD_NTUPLE_Aug5_grid.txt chi_ReRun2012C.root > chi_ReRun2012C.log &
+chi_analysis data/fileList_JetHT_Run2012D-22Jan2013-v1_AOD_NTUPLE_Aug5_grid.txt chi_ReRun2012D.root > chi_ReRun2012D.log &
+chi_analysis data/fileList_QCD_HT-100To250_TuneZ2star_8TeV-madgraph-pythia_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_V5_B_PAT_CMG_V5_13_0_NTUPLE_Feb15_grid.txt chi_QCD_100.root > chi_QCD_100.log &
+chi_analysis data/fileList_QCD_HT-250To500_TuneZ2star_8TeV-madgraph-pythia6_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_V5_B_PAT_CMG_V5_13_0_NTUPLE_Feb15_grid.txt chi_QCD_250.root > chi_QCD_250.log &
+chi_analysis data/fileList_QCD_HT-500To1000_TuneZ2star_8TeV-madgraph-pythia6_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_V5_B_NTUPLE_Aug5_grid.txt chi_QCD_500.root > chi_QCD_500.log &
+chi_analysis data/fileList_QCD_HT-1000ToInf_TuneZ2star_8TeV-madgraph-pythia6_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_V5_B_NTUPLE_Aug5_grid.txt chi_QCD_1000.root > chi_QCD_1000.log &
+

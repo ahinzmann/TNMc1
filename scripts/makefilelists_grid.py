@@ -58,10 +58,10 @@ samples = [
 #('/RadionToHHTo4B_M-2000_TuneZ2star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM/V5_B/NTUPLE_Aug5',False,False,'ProductionTaskTNM'),
 #('/RadionToHHTo4B_M-2500_TuneZ2star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM/V5_B/NTUPLE_Aug5',False,False,'ProductionTaskTNM'),
 #('/RadionToHHTo4B_M-3000_TuneZ2star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM/V5_B/NTUPLE_Aug5',False,False,'ProductionTaskTNM'),
-#('/QCD_HT-1000ToInf_TuneZ2star_8TeV-madgraph-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/NTUPLE_Aug5',False,False,'ProductionTaskTNM'),
+('/QCD_HT-1000ToInf_TuneZ2star_8TeV-madgraph-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/NTUPLE_Aug5',False,False,'ProductionTaskTNM'),
 ('/QCD_HT-500To1000_TuneZ2star_8TeV-madgraph-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/NTUPLE_Aug5',False,False,'ProductionTaskTNM'),
-#('/QCD_HT-250To500_TuneZ2star_8TeV-madgraph-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/PAT_CMG_V5_13_0/NTUPLE_Feb15',False,False,'ProductionTask'),
-#('/QCD_HT-100To250_TuneZ2star_8TeV-madgraph-pythia/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/PAT_CMG_V5_13_0/NTUPLE_Feb15',False,False,'ProductionTask'),
+('/QCD_HT-250To500_TuneZ2star_8TeV-madgraph-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/NTUPLE_Aug5',False,False,'ProductionTaskTNM'),
+('/QCD_HT-100To250_TuneZ2star_8TeV-madgraph-pythia/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/NTUPLE_Aug5',False,False,'ProductionTaskTNM'),
 #('/QCD_Pt-15to3000_TuneEE3C_Flat_8TeV_herwigpp/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/NTUPLE_Aug5',False,False,'ProductionTaskTNM'),
 
 #('/QCD_Pt-170to300_Tune4C_8TeV_pythia8/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Feb15',False,False,'ProductionTask'),

@@ -53,71 +53,9 @@ int main(int argc, char** argv)
   stream.select("edmEventHelper_info.luminosityBlock", eventhelper_luminosityBlock);
   stream.select("edmEventHelper_info.orbitNumber", eventhelper_orbitNumber);
   stream.select("edmEventHelper_info.run", eventhelper_run);
-  stream.select("edmEventHelperExtra_info.dijetCHS_invmass", eventhelperextra_dijetCHS_invmass);
-  stream.select("edmEventHelperExtra_info.dijet_invmass", eventhelperextra_dijet_invmass);
-  stream.select("edmEventHelperExtra_info.wj1CHS_energy", eventhelperextra_wj1CHS_energy);
-  stream.select("edmEventHelperExtra_info.wj1CHS_eta", eventhelperextra_wj1CHS_eta);
-  stream.select("edmEventHelperExtra_info.wj1CHS_mass", eventhelperextra_wj1CHS_mass);
-  stream.select("edmEventHelperExtra_info.wj1CHS_nconst", eventhelperextra_wj1CHS_nconst);
-  stream.select("edmEventHelperExtra_info.wj1CHS_phi", eventhelperextra_wj1CHS_phi);
-  stream.select("edmEventHelperExtra_info.wj1CHS_pt", eventhelperextra_wj1CHS_pt);
-  stream.select("edmEventHelperExtra_info.wj1_energy", eventhelperextra_wj1_energy);
-  stream.select("edmEventHelperExtra_info.wj1_eta", eventhelperextra_wj1_eta);
-  stream.select("edmEventHelperExtra_info.wj1_mass", eventhelperextra_wj1_mass);
-  stream.select("edmEventHelperExtra_info.wj1_nconst", eventhelperextra_wj1_nconst);
-  stream.select("edmEventHelperExtra_info.wj1_phi", eventhelperextra_wj1_phi);
-  stream.select("edmEventHelperExtra_info.wj1_pt", eventhelperextra_wj1_pt);
-  stream.select("edmEventHelperExtra_info.wj1wj2CHS_invmass", eventhelperextra_wj1wj2CHS_invmass);
-  stream.select("edmEventHelperExtra_info.wj1wj2CHS_nconst", eventhelperextra_wj1wj2CHS_nconst);
-  stream.select("edmEventHelperExtra_info.wj1wj2_invmass", eventhelperextra_wj1wj2_invmass);
-  stream.select("edmEventHelperExtra_info.wj1wj2_nconst", eventhelperextra_wj1wj2_nconst);
-  stream.select("edmEventHelperExtra_info.wj2CHS_energy", eventhelperextra_wj2CHS_energy);
-  stream.select("edmEventHelperExtra_info.wj2CHS_eta", eventhelperextra_wj2CHS_eta);
-  stream.select("edmEventHelperExtra_info.wj2CHS_mass", eventhelperextra_wj2CHS_mass);
-  stream.select("edmEventHelperExtra_info.wj2CHS_nconst", eventhelperextra_wj2CHS_nconst);
-  stream.select("edmEventHelperExtra_info.wj2CHS_phi", eventhelperextra_wj2CHS_phi);
-  stream.select("edmEventHelperExtra_info.wj2CHS_pt", eventhelperextra_wj2CHS_pt);
-  stream.select("edmEventHelperExtra_info.wj2_energy", eventhelperextra_wj2_energy);
-  stream.select("edmEventHelperExtra_info.wj2_eta", eventhelperextra_wj2_eta);
-  stream.select("edmEventHelperExtra_info.wj2_mass", eventhelperextra_wj2_mass);
-  stream.select("edmEventHelperExtra_info.wj2_nconst", eventhelperextra_wj2_nconst);
-  stream.select("edmEventHelperExtra_info.wj2_phi", eventhelperextra_wj2_phi);
-  stream.select("edmEventHelperExtra_info.wj2_pt", eventhelperextra_wj2_pt);
   stream.select("GenEventInfoProduct_generator.weight", geneventinfoproduct_weight);
-  stream.select("patJetHelper_selectedPatJets.chargedEmEnergyFraction", jethelper2_chargedEmEnergyFraction);
-  stream.select("patJetHelper_selectedPatJets.chargedHadronEnergyFraction", jethelper2_chargedHadronEnergyFraction);
-  stream.select("patJetHelper_selectedPatJets.chargedMultiplicity", jethelper2_chargedMultiplicity);
-  stream.select("patJetHelper_selectedPatJets.energy", jethelper2_energy);
-  stream.select("patJetHelper_selectedPatJets.eta", jethelper2_eta);
-  stream.select("patJetHelper_selectedPatJets.rapidity", jethelper2_rapidity);
-  stream.select("patJetHelper_selectedPatJets.mass", jethelper2_mass);
-  stream.select("patJetHelper_selectedPatJets.muonEnergyFraction", jethelper2_muonEnergyFraction);
-  stream.select("patJetHelper_selectedPatJets.nConstituents", jethelper2_nConstituents);
-  stream.select("patJetHelper_selectedPatJets.neutralEmEnergyFraction", jethelper2_neutralEmEnergyFraction);
-  stream.select("patJetHelper_selectedPatJets.neutralHadronEnergyFraction", jethelper2_neutralHadronEnergyFraction);
-  stream.select("patJetHelper_selectedPatJets.phi", jethelper2_phi);
-  stream.select("patJetHelper_selectedPatJets.pt", jethelper2_pt);
-  stream.select("patJetHelper_selectedPatJetsCHS.chargedEmEnergyFraction", jethelper_chargedEmEnergyFraction);
-  stream.select("patJetHelper_selectedPatJetsCHS.chargedHadronEnergyFraction", jethelper_chargedHadronEnergyFraction);
-  stream.select("patJetHelper_selectedPatJetsCHS.chargedMultiplicity", jethelper_chargedMultiplicity);
-  stream.select("patJetHelper_selectedPatJetsCHS.combinedSecondaryVertexBJetTags", jethelper_combinedSecondaryVertexBJetTags);
-  stream.select("patJetHelper_selectedPatJetsCHS.combinedSecondaryVertexMVABJetTags", jethelper_combinedSecondaryVertexMVABJetTags);
-  stream.select("patJetHelper_selectedPatJetsCHS.energy", jethelper_energy);
-  stream.select("patJetHelper_selectedPatJetsCHS.eta", jethelper_eta);
-  stream.select("patJetHelper_selectedPatJetsCHS.rapidity", jethelper_rapidity);
-  stream.select("patJetHelper_selectedPatJetsCHS.jetBProbabilityBJetTags", jethelper_jetBProbabilityBJetTags);
-  stream.select("patJetHelper_selectedPatJetsCHS.jetProbabilityBJetTags", jethelper_jetProbabilityBJetTags);
-  stream.select("patJetHelper_selectedPatJetsCHS.mass", jethelper_mass);
-  stream.select("patJetHelper_selectedPatJetsCHS.nConstituents", jethelper_nConstituents);
-  stream.select("patJetHelper_selectedPatJetsCHS.neutralEmEnergyFraction", jethelper_neutralEmEnergyFraction);
-  stream.select("patJetHelper_selectedPatJetsCHS.neutralHadronEnergyFraction", jethelper_neutralHadronEnergyFraction);
-  stream.select("patJetHelper_selectedPatJetsCHS.phi", jethelper_phi);
-  stream.select("patJetHelper_selectedPatJetsCHS.pt", jethelper_pt);
   stream.select("patMET_patMETsRaw.et", met2_et);
   stream.select("patMET_patMETsRaw.sumEt", met2_sumEt);
-  stream.select("npatJetHelper_selectedPatJetsCHS", njethelper);
-  stream.select("npatJetHelper_selectedPatJets", njethelper2);
-  stream.select("nrecoVertex_offlinePrimaryVertices", nvertex);
   stream.select("PileupSummaryInfo_addPileupInfo.getBunchCrossing", pileupsummaryinfo_getBunchCrossing);
   stream.select("PileupSummaryInfo_addPileupInfo.getPU_NumInteractions", pileupsummaryinfo_getPU_NumInteractions);
   stream.select("PileupSummaryInfo_addPileupInfo.getTrueNumInteractions", pileupsummaryinfo_getTrueNumInteractions);
@@ -202,12 +140,29 @@ int main(int argc, char** argv)
   stream.select("edmTriggerResultsHelper_TriggerResults_PAT.HBHENoiseFilterPath", triggerresultshelper_HBHENoiseFilterPath);
   stream.select("sint_hcallasereventfilter2012.value", triggerresultshelper_hcallasereventfilter2012);
 
-  stream.select("cmgPFJet_cmgPFJetSel.energy", jethelper3_energy);
-  stream.select("cmgPFJet_cmgPFJetSel.eta", jethelper3_eta);
-  stream.select("cmgPFJet_cmgPFJetSel.rapidity", jethelper3_rapidity);
-  stream.select("cmgPFJet_cmgPFJetSel.mass", jethelper3_mass);
-  stream.select("cmgPFJet_cmgPFJetSel.phi", jethelper3_phi);
-  stream.select("cmgPFJet_cmgPFJetSel.pt", jethelper3_pt);
+  stream.select("cmgPFJet_cmgPFJetSelCHS.energy", jethelper3_energy);
+  stream.select("cmgPFJet_cmgPFJetSelCHS.eta", jethelper3_eta);
+  stream.select("cmgPFJet_cmgPFJetSelCHS.rapidity", jethelper3_rapidity);
+  stream.select("cmgPFJet_cmgPFJetSelCHS.mass", jethelper3_mass);
+  stream.select("cmgPFJet_cmgPFJetSelCHS.phi", jethelper3_phi);
+  stream.select("cmgPFJet_cmgPFJetSelCHS.pt", jethelper3_pt);
+  stream.select("cmgPFJet_cmgPFJetSelCHS.nConstituents", jethelper3_nConstituents);
+  stream.select("cmgPFJet_cmgPFJetSelCHS.component_0_fraction", jethelper3_component_0_fraction);
+  stream.select("cmgPFJet_cmgPFJetSelCHS.component_0_number", jethelper3_component_0_number);
+  stream.select("cmgPFJet_cmgPFJetSelCHS.component_1_fraction", jethelper3_component_1_fraction);
+  stream.select("cmgPFJet_cmgPFJetSelCHS.component_1_number", jethelper3_component_1_number);
+  stream.select("cmgPFJet_cmgPFJetSelCHS.component_2_fraction", jethelper3_component_2_fraction);
+  stream.select("cmgPFJet_cmgPFJetSelCHS.component_2_number", jethelper3_component_2_number);
+  stream.select("cmgPFJet_cmgPFJetSelCHS.component_3_fraction", jethelper3_component_3_fraction);
+  stream.select("cmgPFJet_cmgPFJetSelCHS.component_3_number", jethelper3_component_3_number);
+  stream.select("cmgPFJet_cmgPFJetSelCHS.component_4_fraction", jethelper3_component_4_fraction);
+  stream.select("cmgPFJet_cmgPFJetSelCHS.component_4_number", jethelper3_component_4_number);
+  stream.select("cmgPFJet_cmgPFJetSelCHS.component_5_fraction", jethelper3_component_5_fraction);
+  stream.select("cmgPFJet_cmgPFJetSelCHS.component_5_number", jethelper3_component_5_number);
+  stream.select("cmgPFJet_cmgPFJetSelCHS.component_6_fraction", jethelper3_component_6_fraction);
+  stream.select("cmgPFJet_cmgPFJetSelCHS.component_6_number", jethelper3_component_6_number);
+  stream.select("cmgPFJet_cmgPFJetSelCHS.component_7_fraction", jethelper3_component_7_fraction);
+  stream.select("cmgPFJet_cmgPFJetSelCHS.component_7_number", jethelper3_component_7_number);
 
   // The root application is needed to make canvases visible during
   // program execution. If this is not needed, just comment out the following
@@ -340,7 +295,7 @@ int main(int argc, char** argv)
       histsdphi.push_back(new TH1F(name.str().c_str(),name.str().c_str(),20,0,3.15));
       histsdphi[j]->Sumw2();
   }
-
+/*
   std::vector<std::string> eventlist;
   std::ifstream infile_;
   char a[80];
@@ -360,7 +315,7 @@ int main(int argc, char** argv)
   edm::ParameterSet parameters;
   parameters.addUntrackedParameter<std::vector<std::string>>("EventList",eventlist);
   HcalLaserEventFilter2012 laserfilter(parameters);
-
+*/
 // Instantiate uncertainty sources
 int nsrc = 19; /////////////////////////////
 const char* srcnames[19] =
@@ -376,7 +331,7 @@ std::vector<JetCorrectionUncertainty*> vsrc(nsrc);
 for (int isrc = 0; isrc < nsrc; isrc++) {
 
    const char *name = srcnames[isrc];
-   JetCorrectorParameters *p = new JetCorrectorParameters("data/Fall12_V6_DATA_UncertaintySources_AK7PF.txt", name);
+   JetCorrectorParameters *p = new JetCorrectorParameters("data/Fall12_V6_DATA_UncertaintySources_AK5PFchs.txt", name);
    JetCorrectionUncertainty *unc = new JetCorrectionUncertainty(*p);
    vsrc[isrc] = unc;
 } // for isrc
@@ -412,8 +367,12 @@ for (int isrc = 0; isrc < nsrc; isrc++) {
 
   std::cout << "event..." << std::endl;
 
+  bool hcallasereventfilter2012active=false;
+  bool datafiltersactive=false;
+
   for(int entry=0; entry < nevents; ++entry)
 	{
+
 	  // Read event into memory
 	  stream.read(entry);
 
@@ -436,6 +395,29 @@ for (int isrc = 0; isrc < nsrc; isrc++) {
 	  // ---------------------
 	  // -- event selection --
 	  // ---------------------
+
+          if (triggerresultshelper_hcallasereventfilter2012!=0)
+	     hcallasereventfilter2012active=true;
+
+	  if((triggerresultshelper_primaryVertexFilterPath!=0)&&
+	     (triggerresultshelper_noscrapingFilterPath!=0)&&
+	     (triggerresultshelper_trackingFailureFilterPath!=0)&&
+	     (triggerresultshelper_hcalLaserEventFilterPath!=0)&&
+	     (triggerresultshelper_HBHENoiseFilterPath!=0)&&
+	     (triggerresultshelper_CSCTightHaloFilterPath!=0)&&
+	     (triggerresultshelper_EcalDeadCellTriggerPrimitiveFilterPath!=0))
+	     datafiltersactive=true;
+
+	  bool noiseRemoval = (((sdouble_kt6PFJets_rho_value<40)&&
+	       (triggerresultshelper_primaryVertexFilterPath!=0)&&
+	       (triggerresultshelper_noscrapingFilterPath!=0)&&
+	       (triggerresultshelper_trackingFailureFilterPath!=0)&&
+	       (triggerresultshelper_hcalLaserEventFilterPath!=0)&&
+	       (triggerresultshelper_HBHENoiseFilterPath!=0)&&
+	       (triggerresultshelper_CSCTightHaloFilterPath!=0)&&
+	       (triggerresultshelper_EcalDeadCellTriggerPrimitiveFilterPath!=0))||
+	      (datafiltersactive==false))&&
+	    ((triggerresultshelper_hcallasereventfilter2012!=0)||(hcallasereventfilter2012active==false));
            
 	  if(!((jethelper3_pt.size()>=2)&&
 	     (jethelper3_pt[0]>30)&&
@@ -446,38 +428,30 @@ for (int isrc = 0; isrc < nsrc; isrc++) {
              (exp(fabs(jethelper3_rapidity[0]-jethelper3_rapidity[1]))<16)&&
 	     (DijetMass>500)&&
 	     
-	     (jethelper2_muonEnergyFraction[0]<0.80)&&
-	     //(jethelper2_neutralHadronEnergyFraction[0]<0.99)&&
-	     (jethelper2_neutralHadronEnergyFraction[0]<0.90)&&
-	     //(jethelper2_neutralEmEnergyFraction[0]<0.99)&&
-	     (jethelper2_neutralEmEnergyFraction[0]<0.90)&&
-	     (jethelper2_nConstituents[0]>1)&&
-	     ((fabs(jethelper2_eta[0])>2.4)||
-	      ((jethelper2_chargedHadronEnergyFraction[0]>0.01)&&
-	       (jethelper2_chargedMultiplicity[0]>0)&&
-	       (jethelper2_chargedEmEnergyFraction[0]<0.99)))&&
+	     (jethelper3_component_3_fraction[0]<0.80)&&
+	     //(jethelper3_component_5_fraction[0]<0.99)&&
+	     (jethelper3_component_5_fraction[0]<0.90)&&
+	     //(jethelper3_component_4_fraction[0]<0.99)&&
+	     (jethelper3_component_4_fraction[0]<0.90)&&
+	     (jethelper3_nConstituents[0]>1)&&
+	     ((fabs(jethelper3_eta[0])>2.4)||
+	      ((jethelper3_component_1_fraction[0]>0.01)&&
+	       (jethelper3_component_1_number[0]+jethelper3_component_2_number[0]+jethelper3_component_2_number[0]>0)&&
+	       (jethelper3_component_2_fraction[0]<0.99)))&&
 	     
-	     (jethelper2_muonEnergyFraction[1]<0.80)&&
-	     //(jethelper2_neutralHadronEnergyFraction[1]<0.99)&&
-	     (jethelper2_neutralHadronEnergyFraction[1]<0.90)&&
-	     //(jethelper2_neutralEmEnergyFraction[1]<0.99)&&
-	     (jethelper2_neutralEmEnergyFraction[1]<0.90)&&
-	     (jethelper2_nConstituents[1]>1)&&
-	     ((fabs(jethelper2_eta[1])>2.4)||
-	      ((jethelper2_chargedHadronEnergyFraction[1]>0.01)&&
-	       (jethelper2_chargedMultiplicity[1]>0)&&
-	       (jethelper2_chargedEmEnergyFraction[1]<0.99)))
+	     (jethelper3_component_3_fraction[1]<0.80)&&
+	     //(jethelper3_component_5_fraction[1]<0.99)&&
+	     (jethelper3_component_5_fraction[1]<0.90)&&
+	     //(jethelper3_component_4_fraction[1]<0.99)&&
+	     (jethelper3_component_4_fraction[1]<0.90)&&
+	     (jethelper3_nConstituents[1]>1)&&
+	     ((fabs(jethelper3_eta[1])>2.4)||
+	      ((jethelper3_component_1_fraction[1]>0.01)&&
+	       (jethelper3_component_1_number[1]+jethelper3_component_2_number[1]+jethelper3_component_3_number[1]>0)&&
+	       (jethelper3_component_2_fraction[1]<0.99)))
 	     
 	     &&
-	     (sdouble_kt6PFJets_rho_value<40)&&
-	     (triggerresultshelper_primaryVertexFilterPath!=0)&&
-	     (triggerresultshelper_noscrapingFilterPath!=0)&&
-	     (triggerresultshelper_trackingFailureFilterPath!=0)&&
-	     (triggerresultshelper_hcalLaserEventFilterPath!=0)&&
-	     (triggerresultshelper_HBHENoiseFilterPath!=0)&&
-	     (triggerresultshelper_CSCTightHaloFilterPath!=0)&&
-	     (triggerresultshelper_EcalDeadCellTriggerPrimitiveFilterPath!=0)&&
-	     (triggerresultshelper_hcallasereventfilter2012!=0)
+	     (noiseRemoval)
 	    )) continue;
 
 	  //if(!laserfilter.filter(eventhelper_run,eventhelper_luminosityBlock,eventhelper_event)) continue;

@@ -1397,22 +1397,22 @@ cms.EDAnalyzer("TheNtupleMaker",
     'double  rapidity()',
     'int  nConstituents()',
     # component numbering is defined in DataFormats/ParticleFlowCandidate/interface/PFCandidate.h line 38
-    'double  component(0).fraction()', #undefined
-    'double  component(0).number()', #undefined
-    'double  component(1).fraction()', #charged hadron
-    'double  component(1).number()', #charged hadron
-    'double  component(2).fraction()', #electron
-    'double  component(2).number()', #electron
-    'double  component(3).fraction()', #muon
-    'double  component(3).number()', #muon
-    'double  component(4).fraction()', #photon
-    'double  component(4).number()', #photon
-    'double  component(5).fraction()', #neutral hadron
-    'double  component(5).number()', #neutral hadron
-    'double  component(6).fraction()', #HF hadron
-    'double  component(6).number()', #HF hadron
-    'double  component(7).fraction()', #HF EM
-    'double  component(7).number()', #HF EM
+    'float  component(0).fraction()', #undefined
+    'int  component(0).number()', #undefined
+    'float  component(1).fraction()', #charged hadron
+    'int  component(1).number()', #charged hadron
+    'float  component(2).fraction()', #electron
+    'int  component(2).number()', #electron
+    'float  component(3).fraction()', #muon
+    'int  component(3).number()', #muon
+    'float  component(4).fraction()', #photon
+    'int  component(4).number()', #photon
+    'float  component(5).fraction()', #neutral hadron
+    'int  component(5).number()', #neutral hadron
+    'float  component(6).fraction()', #HF hadron
+    'int  component(6).number()', #HF hadron
+    'float  component(7).fraction()', #HF EM
+    'int  component(7).number()', #HF EM
     # btag
     'double  btag(0) trackCountingHighEffBJetTag',
     'double  btag(1) trackCountingHighPurBJetTags',
