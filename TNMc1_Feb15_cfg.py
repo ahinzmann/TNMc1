@@ -22,8 +22,8 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
 
 # Run on MC or data
 
-runOnMC = False
-runPATCMG = True
+runOnMC = True
+runPATCMG = False
 recalibrateCMGJets = False
 runAK7jets = False
 runPrunedAK7jets = False
