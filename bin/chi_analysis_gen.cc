@@ -54,8 +54,8 @@ int main(int argc, char** argv)
   stream.select("edmEventHelper_info.orbitNumber", eventhelper_orbitNumber);
   stream.select("edmEventHelper_info.run", eventhelper_run);
   stream.select("GenEventInfoProduct_generator.weight", geneventinfoproduct_weight);
-  stream.select("cmgBaseMET_cmgPFMET.et", met2_et);
-  stream.select("cmgBaseMET_cmgPFMET.sumEt", met2_sumEt);
+  stream.select("patMET_patMETsRaw.et", met2_et);
+  stream.select("patMET_patMETsRaw.sumEt", met2_sumEt);
   stream.select("PileupSummaryInfo_addPileupInfo.getBunchCrossing", pileupsummaryinfo_getBunchCrossing);
   stream.select("PileupSummaryInfo_addPileupInfo.getPU_NumInteractions", pileupsummaryinfo_getPU_NumInteractions);
   stream.select("PileupSummaryInfo_addPileupInfo.getTrueNumInteractions", pileupsummaryinfo_getTrueNumInteractions);
@@ -140,29 +140,29 @@ int main(int argc, char** argv)
   stream.select("edmTriggerResultsHelper_TriggerResults_PAT.HBHENoiseFilterPath", triggerresultshelper_HBHENoiseFilterPath);
   stream.select("sint_hcallasereventfilter2012.value", triggerresultshelper_hcallasereventfilter2012);
 
-  stream.select("cmgPFJet_cmgPFJetSelCHS.energy", jethelper3_energy);
-  stream.select("cmgPFJet_cmgPFJetSelCHS.eta", jethelper3_eta);
-  stream.select("cmgPFJet_cmgPFJetSelCHS.rapidity", jethelper3_rapidity);
-  stream.select("cmgPFJet_cmgPFJetSelCHS.mass", jethelper3_mass);
-  stream.select("cmgPFJet_cmgPFJetSelCHS.phi", jethelper3_phi);
-  stream.select("cmgPFJet_cmgPFJetSelCHS.pt", jethelper3_pt);
-  stream.select("cmgPFJet_cmgPFJetSelCHS.nConstituents", jethelper3_nConstituents);
-  stream.select("cmgPFJet_cmgPFJetSelCHS.component_0_fraction", jethelper3_component_0_fraction);
-  stream.select("cmgPFJet_cmgPFJetSelCHS.component_0_number", jethelper3_component_0_number);
-  stream.select("cmgPFJet_cmgPFJetSelCHS.component_1_fraction", jethelper3_component_1_fraction);
-  stream.select("cmgPFJet_cmgPFJetSelCHS.component_1_number", jethelper3_component_1_number);
-  stream.select("cmgPFJet_cmgPFJetSelCHS.component_2_fraction", jethelper3_component_2_fraction);
-  stream.select("cmgPFJet_cmgPFJetSelCHS.component_2_number", jethelper3_component_2_number);
-  stream.select("cmgPFJet_cmgPFJetSelCHS.component_3_fraction", jethelper3_component_3_fraction);
-  stream.select("cmgPFJet_cmgPFJetSelCHS.component_3_number", jethelper3_component_3_number);
-  stream.select("cmgPFJet_cmgPFJetSelCHS.component_4_fraction", jethelper3_component_4_fraction);
-  stream.select("cmgPFJet_cmgPFJetSelCHS.component_4_number", jethelper3_component_4_number);
-  stream.select("cmgPFJet_cmgPFJetSelCHS.component_5_fraction", jethelper3_component_5_fraction);
-  stream.select("cmgPFJet_cmgPFJetSelCHS.component_5_number", jethelper3_component_5_number);
-  stream.select("cmgPFJet_cmgPFJetSelCHS.component_6_fraction", jethelper3_component_6_fraction);
-  stream.select("cmgPFJet_cmgPFJetSelCHS.component_6_number", jethelper3_component_6_number);
-  stream.select("cmgPFJet_cmgPFJetSelCHS.component_7_fraction", jethelper3_component_7_fraction);
-  stream.select("cmgPFJet_cmgPFJetSelCHS.component_7_number", jethelper3_component_7_number);
+  stream.select("recoGenJet_ak5GenJets.energy", jethelper3_energy);
+  stream.select("recoGenJet_ak5GenJets.eta", jethelper3_eta);
+  stream.select("recoGenJet_ak5GenJets.rapidity", jethelper3_rapidity);
+  stream.select("recoGenJet_ak5GenJets.mass", jethelper3_mass);
+  stream.select("recoGenJet_ak5GenJets.phi", jethelper3_phi);
+  stream.select("recoGenJet_ak5GenJets.pt", jethelper3_pt);
+  stream.select("recoGenJet_ak5GenJets.nConstituents", jethelper3_nConstituents);
+  stream.select("recoGenJet_ak5GenJets.component_0_fraction", jethelper3_component_0_fraction);
+  stream.select("recoGenJet_ak5GenJets.component_0_number", jethelper3_component_0_number);
+  stream.select("recoGenJet_ak5GenJets.component_1_fraction", jethelper3_component_1_fraction);
+  stream.select("recoGenJet_ak5GenJets.component_1_number", jethelper3_component_1_number);
+  stream.select("recoGenJet_ak5GenJets.component_2_fraction", jethelper3_component_2_fraction);
+  stream.select("recoGenJet_ak5GenJets.component_2_number", jethelper3_component_2_number);
+  stream.select("recoGenJet_ak5GenJets.component_3_fraction", jethelper3_component_3_fraction);
+  stream.select("recoGenJet_ak5GenJets.component_3_number", jethelper3_component_3_number);
+  stream.select("recoGenJet_ak5GenJets.component_4_fraction", jethelper3_component_4_fraction);
+  stream.select("recoGenJet_ak5GenJets.component_4_number", jethelper3_component_4_number);
+  stream.select("recoGenJet_ak5GenJets.component_5_fraction", jethelper3_component_5_fraction);
+  stream.select("recoGenJet_ak5GenJets.component_5_number", jethelper3_component_5_number);
+  stream.select("recoGenJet_ak5GenJets.component_6_fraction", jethelper3_component_6_fraction);
+  stream.select("recoGenJet_ak5GenJets.component_6_number", jethelper3_component_6_number);
+  stream.select("recoGenJet_ak5GenJets.component_7_fraction", jethelper3_component_7_fraction);
+  stream.select("recoGenJet_ak5GenJets.component_7_number", jethelper3_component_7_number);
 
   // The root application is needed to make canvases visible during
   // program execution. If this is not needed, just comment out the following
@@ -395,7 +395,7 @@ for (int isrc = 0; isrc < nsrc; isrc++) {
 	  // ---------------------
 	  // -- event selection --
 	  // ---------------------
-
+/*
           if (triggerresultshelper_hcallasereventfilter2012!=0)
 	     hcallasereventfilter2012active=true;
 
@@ -420,7 +420,7 @@ for (int isrc = 0; isrc < nsrc; isrc++) {
 	       )||
 	      (datafiltersactive==false))&&
 	    ((triggerresultshelper_hcallasereventfilter2012!=0)||(hcallasereventfilter2012active==false));
-           
+*/           
 	  if(!((jethelper3_pt.size()>=2)&&
 	     (jethelper3_pt[0]>30)&&
 	     (jethelper3_pt[1]>30)&&
@@ -428,7 +428,8 @@ for (int isrc = 0; isrc < nsrc; isrc++) {
 	     (fabs(jethelper3_rapidity[1])<2.5)&&
              (fabs(jethelper3_rapidity[0]+jethelper3_rapidity[1])/2.<1.11)&&
              (exp(fabs(jethelper3_rapidity[0]-jethelper3_rapidity[1]))<16)&&
-	     (DijetMass>500)&&
+	     (DijetMass>500)
+/*	     &&
 	     
 	     (jethelper3_component_3_fraction[0]<0.80)&&
 	     //(jethelper3_component_5_fraction[0]<0.99)&&
@@ -454,7 +455,7 @@ for (int isrc = 0; isrc < nsrc; isrc++) {
 	     
 	     &&
 	     (noiseRemoval)
-	    )) continue;
+*/	    )) continue;
 
 	  //if(!laserfilter.filter(eventhelper_run,eventhelper_luminosityBlock,eventhelper_event)) continue;
 	   

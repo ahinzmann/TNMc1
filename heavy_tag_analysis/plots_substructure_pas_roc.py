@@ -25,14 +25,23 @@ TGaxis.SetMaxDigits(3)
 
 if __name__ == '__main__':
 
- scenario="_lowPU"
- #scenario=""
- scenario="_Gen"
+ #scenario="_lowPU"
+ scenario=""
+ #scenario="_Gen_prunedmass"
+ #scenario="_Gen_mass"
+ #scenario="_Gen"
+ 
+ particle="WW"
+ #particle="ZZ"
 
  samples = ["~/workspace/substructure/substructure_pas_QCD500.root",
              "~/workspace/substructure/substructure_pas_QCD1000.root",
-             "substructure_pas_WWBulk1000.root",
             ]
+
+ if particle=="WW":
+     samples+=["substructure_pas_WWPy61000.root",]
+ if particle=="ZZ":
+     samples+=["substructure_pas_ZZPy61000.root",]
 
  selection="(abs(Jet1eta)<2.4)&&(deta<1.3)&&(DijetMass>890)&&(Jet1pt>400)&&(Jet1pt<600)"
  selection_mass="&&(Jet1Mass>60)&&(Jet1Mass<100)"
@@ -43,7 +52,32 @@ if __name__ == '__main__':
         ]
 
  if scenario=="_Gen":
-  selection="(abs(Jet1eta)<2.4)&&(deta<1.3)&&(DijetMass>890)&&(Jet1pt>400)&&(Jet1pt<600)"
+  selection_mass=""
+  selection="(abs(GenJet1eta)<2.4)&&(deta<1.3)&&(GenDijetMass>890)&&(GenJet1pt>400)&&(GenJet1pt<600)"
+  plots=[("GenJet1Nsub","#tau_{2}/#tau_{1}",-1,10,False),
+        ("GenJet1NsubPruned","pruned #tau_{2}/#tau_{1}",-1,10,False),
+        ("GenJet1MassDrop","mass drop",-1,10,False),
+        ("GenJet1C2beta17","C_{2} (#beta=1.7)",-1,10,False),
+        ]
+
+ if scenario=="_Gen_mass":
+  if particle=="ZZ":
+     selection_mass="&&(GenJet1UnGroomedMass>80)&&(GenJet1UnGroomedMass<100)"
+  if particle=="WW":
+     selection_mass="&&(GenJet1UnGroomedMass>70)&&(GenJet1UnGroomedMass<90)"
+  selection="(abs(GenJet1eta)<2.4)&&(deta<1.3)&&(GenDijetMass>890)&&(GenJet1pt>400)&&(GenJet1pt<600)"
+  plots=[("GenJet1Nsub","#tau_{2}/#tau_{1}",-1,10,False),
+        ("GenJet1NsubPruned","pruned #tau_{2}/#tau_{1}",-1,10,False),
+        ("GenJet1MassDrop","mass drop",-1,10,False),
+        ("GenJet1C2beta17","C_{2} (#beta=1.7)",-1,10,False),
+        ]
+
+ if scenario=="_Gen_prunedmass":
+  if particle=="ZZ":
+     selection_mass="&&(Jet1Mass>80)&&(Jet1Mass<100)"
+  if particle=="WW":
+     selection_mass="&&(Jet1Mass>70)&&(Jet1Mass<90)"
+  selection="(abs(GenJet1eta)<2.4)&&(deta<1.3)&&(GenDijetMass>890)&&(GenJet1pt>400)&&(GenJet1pt<600)"
   plots=[("GenJet1Nsub","#tau_{2}/#tau_{1}",-1,10,False),
         ("GenJet1NsubPruned","pruned #tau_{2}/#tau_{1}",-1,10,False),
         ("GenJet1MassDrop","mass drop",-1,10,False),
@@ -150,23 +184,27 @@ if __name__ == '__main__':
  legend2=TLegend(0.65,0.8,0.9,0.85,"400 < p_{T} < 600 GeV")
  legend2.SetTextSize(0.03)
  legend2.SetFillStyle(0)
- legend2.Draw("same")
+ if not "Gen" in scenario:
+   legend2.Draw("same")
 
  legend2a=TLegend(0.73,0.75,0.9,0.8,"|#eta|<2.4")
  legend2a.SetTextSize(0.03)
  legend2a.SetFillStyle(0)
  legend2a.Draw("same")
 
- banner = TLatex(0.24,0.93,"CMS Preliminary Simulation, #sqrt{s} = 8 TeV, dijets");
+ if "Gen" in scenario:
+  banner = TLatex(0.24,0.93,"#sqrt{s} = 8 TeV, dijets");
+ else:
+  banner = TLatex(0.24,0.93,"CMS Preliminary Simulation, #sqrt{s} = 8 TeV, dijets");
  banner.SetNDC()
  banner.SetTextSize(0.04)
  banner.Draw();  
 
- canvas.SaveAs("substructure_pas_roc"+scenario+".png")
- canvas.SaveAs("substructure_pas_roc"+scenario+".pdf")
- canvas.SaveAs("substructure_pas_roc"+scenario+".root")
- canvas.SaveAs("substructure_pas_roc"+scenario+".C")
- canvas.SaveAs("substructure_pas_roc"+scenario+".eps")
+ canvas.SaveAs("substructure_pas_"+particle+"roc"+scenario+".png")
+ canvas.SaveAs("substructure_pas_"+particle+"roc"+scenario+".pdf")
+ canvas.SaveAs("substructure_pas_"+particle+"roc"+scenario+".root")
+ canvas.SaveAs("substructure_pas_"+particle+"roc"+scenario+".C")
+ canvas.SaveAs("substructure_pas_"+particle+"roc"+scenario+".eps")
 
  canvas = TCanvas("","",0,0,200,200)
  canvas.SetLogy(False)
@@ -182,8 +220,8 @@ if __name__ == '__main__':
  legend2a.Draw("same")
  banner.Draw();  
 
- canvas.SaveAs("substructure_pas_roc2"+scenario+".png")
- canvas.SaveAs("substructure_pas_roc2"+scenario+".pdf")
- canvas.SaveAs("substructure_pas_roc2"+scenario+".root")
- canvas.SaveAs("substructure_pas_roc2"+scenario+".C")
- canvas.SaveAs("substructure_pas_roc2"+scenario+".eps")
+ canvas.SaveAs("substructure_pas_"+particle+"roc2"+scenario+".png")
+ canvas.SaveAs("substructure_pas_"+particle+"roc2"+scenario+".pdf")
+ canvas.SaveAs("substructure_pas_"+particle+"roc2"+scenario+".root")
+ canvas.SaveAs("substructure_pas_"+particle+"roc2"+scenario+".C")
+ canvas.SaveAs("substructure_pas_"+particle+"roc2"+scenario+".eps")

@@ -23,7 +23,7 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
 # Run on MC or data
 
 runOnMC = True
-runPATCMG = False
+runPATCMG = True
 recalibrateCMGJets = False
 runAK7jets = False
 runPrunedAK7jets = False
@@ -51,10 +51,10 @@ else:
     dataset_files = 'patTuple.*root'
 
 if runPATCMG:
-    #dataset_user = 'cmgtools_group' 
-    #dataset_name = '/RSGravitonToWW_kMpl01_M-1000_Tune23_8TeV-herwigpp/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B'
-    dataset_user = 'CMS' 
-    dataset_name = '/JetHT/Run2012D-22Jan2013-v1/AOD'
+    dataset_user = 'cmgtools_group' 
+    dataset_name = '/RSGravitonToWW_kMpl01_M-1000_Tune23_8TeV-herwigpp/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B'
+    #dataset_user = 'CMS' 
+    #dataset_name = '/JetHT/Run2012D-22Jan2013-v1/AOD'
     dataset_files = '.*root'
 
 from CMGTools.Production.datasetToSource import *

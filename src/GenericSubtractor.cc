@@ -35,7 +35,17 @@ namespace contrib{
 //------------------------------------------------------------------------
 // implementation of Genericsubtractor
 //------------------------------------------------------------------------
+   
+  const double GenericSubtractor::_invalid_rho = -numeric_limits<double>::infinity();
 
+  // Constructor that takes an externally supplied value for rho and,
+  // optionally, for rho_m. The latter defaults to zero.
+  GenericSubtractor:: GenericSubtractor(double rho, double rhom) :      
+    _bge_rho(0), _bge_rhom(0),_jet_pt_fraction(0.01), _common_bge(false),
+    _rho(rho), _rhom(rhom), _externally_supplied_rho_rhom(true) {
+    assert(_rho  >= 0);
+    assert(_rhom >= 0);
+  }
 
 //----------------------------------------------------------------------
 // the action on a given jet for a given shape
@@ -49,9 +59,9 @@ double GenericSubtractor::operator()(const FunctionOfPseudoJet<double> &shape,
 // the action on a given jet for a given shape
 double GenericSubtractor::operator()(const FunctionOfPseudoJet<double> &shape,
                                       const PseudoJet &jet, GenericSubtractorInfo &info) const{
-  // make sure we have a BGE
-  if (!_bge_rho)
-    throw Error("GenericSubtractor::operator(): generic subtraction needs a JetMedianBackgroundEstimator");
+  // make sure we have a BGE or a rho value
+  if (!_bge_rho && !_externally_supplied_rho_rhom)
+    throw Error("GenericSubtractor::operator(): generic subtraction needs a JetMedianBackgroundEstimator or a value for rho");
 
   // if the shape is of the "ShapeWithPartition" type, first compute
   // the partition and work with that
@@ -100,24 +110,33 @@ double GenericSubtractor::operator()(const FunctionOfPseudoJet<double> &shape,
   // estimate the background (both pt and dt=mt-pt) densities
   double ghost_area = ghosts[0].area();
 
-  double rho = _bge_rho->rho(jet);
-  double rho_mt;
-  // rho_mt may be evaluated from a dedicated background estimator or
-  // from a modification of the jet density class of the "rho" background estimator;
-  // if neither of those options is chosen, we set it to zero.
-  if (_bge_rhom){
-    rho_mt = _bge_rhom->rho(jet);
-  } else if (_common_bge){
-    BackgroundJetPtMDensity _m_density;
-    JetMedianBackgroundEstimator *jmbge = dynamic_cast<JetMedianBackgroundEstimator*>(_bge_rho);
-    const FunctionOfPseudoJet<double> * orig_density = jmbge->jet_density_class();
-    jmbge->set_jet_density_class(&_m_density);
-    rho_mt = jmbge->rho(jet);
-    jmbge->set_jet_density_class(orig_density);
-  } else {
-    rho_mt = 0.0;
+  double rho, rhom;
+  if ( _externally_supplied_rho_rhom ) {
+    rho = _rho;
+    rhom = _rhom;
+  } else {   
+    rho = _bge_rho->rho(jet);
+    // rho_m may be evaluated from a dedicated background estimator or
+    // from a modification of the jet density class of the "rho" background estimator;
+    // if neither of those options is chosen, we set it to zero.
+    if (_bge_rhom){
+      rhom = _bge_rhom->rho(jet);
+    } else if (_common_bge){
+      BackgroundJetPtMDensity _m_density;
+      JetMedianBackgroundEstimator *jmbge = dynamic_cast<JetMedianBackgroundEstimator*>(_bge_rho);
+      const FunctionOfPseudoJet<double> * orig_density = jmbge->jet_density_class();
+      jmbge->set_jet_density_class(&_m_density);
+      rhom = jmbge->rho(jet);
+      jmbge->set_jet_density_class(orig_density);
+    } else {
+      rhom = 0.0;
+    }
   }
-  double rho_sum = rho + rho_mt;
+  info._rho  = rho;
+  info._rhom = rhom;
+
+    
+  double rho_sum = rho + rhom;
 
   double rho_pt_fraction = (rho_sum == 0) ? 0.0 : rho/rho_sum;
 
@@ -138,13 +157,17 @@ void GenericSubtractor::use_common_bge_for_rho_and_rhom(bool value){
   if (value){
     // make sure we only have one bge
     if (_bge_rhom)
-      throw Error("GenericSubtractor::use_common_bge_for_rho_and_rhom is not allowed in the presence of an existing background estimator for rhom.");
+      throw Error("GenericSubtractor::use_common_bge_for_rho_and_rhom() is not allowed in the presence of an existing background estimator for rho_m.");
 
+    // make sure we are not using externally supplied values for tho and rhom
+    if (_externally_supplied_rho_rhom)
+      throw Error("GenericSubtractor::use_common_bge_for_rho_and_rhom() is not allowed when supplying externally the values for rho and rho_m.");
+
+    // check the background estimator type
     JetMedianBackgroundEstimator *jmbge = dynamic_cast<JetMedianBackgroundEstimator*>(_bge_rho);
     if (!jmbge)
-      throw Error("GenericSubtractor::use_common_bge_for_rho_and_rhom is currently only allowed for background estimators of JetMedianBackgroundEstimator type.");
+      throw Error("GenericSubtractor::use_common_bge_for_rho_and_rhom() is currently only allowed for background estimators of JetMedianBackgroundEstimator type.");
   }
-
   _common_bge=value;
 }
 
@@ -152,12 +175,17 @@ void GenericSubtractor::use_common_bge_for_rho_and_rhom(bool value){
 //----------------------------------------------------------------------
 // a description of what this class does
 string GenericSubtractor::description() const{
-  if (_bge_rhom) {
-    return string("generic subtractor using (")+_bge_rho->description()+
-      string(") and (")+_bge_rhom->description()+string(") to estimate the background");
-  }
-
-  return string("generic subtractor using (")+_bge_rho->description()+string(") to estimate the background");
+  ostringstream descr;
+  if ( _externally_supplied_rho_rhom){
+    descr << "GenericSubtractor using externally supplied rho = " << _rho << " and rho_m = " << _rhom << " to describe the background";
+  } else {
+    if (_bge_rhom) {
+      descr << "GenericSubtractor using [" << _bge_rho->description() << "] and [" << _bge_rhom->description() << "] to estimate the background";
+    } else {
+      descr << "GenericSubtractor using [" << _bge_rho->description() << "] to estimate the background";
+    }
+  }  
+  return descr.str();
 }
 
 

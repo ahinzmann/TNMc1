@@ -167,7 +167,11 @@ std::vector<double>	jethelperGenCA8pruned_mass(10,0);
 std::vector<double>	jethelperGenCA8pruned_eta(10,0);
 std::vector<double>	jethelperGenCA8pruned_phi(10,0);
 std::vector<double>	jethelperGenCA8pruned_pt(10,0);
-
+//std::vector<double>	jethelperAK5_pt(10,0);
+//std::vector<double>	jethelperAK5_eta(10,0);
+//std::vector<double>	jethelperAK5_phi(10,0);
+//std::vector<double>	jethelperAK5_energy(10,0);
+//std::vector<double>	jethelperAK5_mass(10,0);
 
 std::vector<float>	jethelperCA8_combinedSecondaryVertexBJetTags(10,0);
 std::vector<float>	jethelperCA8_combinedSecondaryVertexMVABJetTags(10,0);
@@ -205,13 +209,14 @@ std::vector<double>	jethelperCA8_tau1(10,0);
 std::vector<double>	jethelperCA8_tau2(10,0);
 std::vector<double>	jethelperCA8_C2beta17(10,0);
 std::vector<double>	jethelperCA8pruned_mass(10,0);
+std::vector<double>	jethelperCA8pruned_energy(10,0);
 std::vector<double>	jethelperCA8pruned_phi(10,0);
 std::vector<double>	jethelperCA8pruned_eta(10,0);
-std::vector<double>	jethelperCA8pruned_pt(10,0);
-std::vector<double>	jethelperCA8pruned_energy(10,0);
+std::vector<float>	jethelperCA8pruned_pt(10,0);
 std::vector<double>	jethelperCA8pruned_uncor_pt(10,0);
 std::vector<size_t>	jethelperCA8pruned_numberOfDaughters(10,0);
 std::vector<float>	jethelperCA8pruned_daughter_0_chargedEmEnergyFraction(10,0);
+std::vector<float>   jethelperCA8pruned_daughter_0_combinedSecondaryVertexBJetTags(10,0);
 std::vector<float>	jethelperCA8pruned_daughter_0_chargedHadronEnergyFraction(10,0);
 std::vector<int>	jethelperCA8pruned_daughter_0_chargedMultiplicity(10,0);
 std::vector<double>	jethelperCA8pruned_daughter_0_energy(10,0);
@@ -225,6 +230,7 @@ std::vector<double>	jethelperCA8pruned_daughter_0_phi(10,0);
 std::vector<float>	jethelperCA8pruned_daughter_0_photonEnergyFraction(10,0);
 std::vector<double>	jethelperCA8pruned_daughter_0_pt(10,0);
 std::vector<float>	jethelperCA8pruned_daughter_1_chargedEmEnergyFraction(10,0);
+std::vector<float>   jethelperCA8pruned_daughter_1_combinedSecondaryVertexBJetTags(10,0);
 std::vector<float>	jethelperCA8pruned_daughter_1_chargedHadronEnergyFraction(10,0);
 std::vector<int>	jethelperCA8pruned_daughter_1_chargedMultiplicity(10,0);
 std::vector<double>	jethelperCA8pruned_daughter_1_energy(10,0);
@@ -237,6 +243,22 @@ std::vector<float>	jethelperCA8pruned_daughter_1_neutralHadronEnergyFraction(10,
 std::vector<double>	jethelperCA8pruned_daughter_1_phi(10,0);
 std::vector<float>	jethelperCA8pruned_daughter_1_photonEnergyFraction(10,0);
 std::vector<double>	jethelperCA8pruned_daughter_1_pt(10,0);
+std::vector<double>  cmgPFJet_cmgPFJetSelCHS_pt(10,0);
+std::vector<double>  cmgPFJet_cmgPFJetSelCHS_eta(10,0);
+std::vector<double>  cmgPFJet_cmgPFJetSelCHS_phi(10,0);
+std::vector<double>  cmgPFJet_cmgPFJetSelCHS_energy(10,0);
+std::vector<float>  cmgPFJet_cmgPFJetSelCHS_combinedSecondaryVertexBJetTags(10,0);
+std::vector<double>  cmgPFJet_cmgPFJetSelCHS_mass(10,0);
+
+
+std::vector<float> jethelperAK5_combinedSecondaryVertexBJetTags(10,0);
+
+std::vector<double> jethelperAK5_pt(10,0);
+std::vector<double> jethelperAK5_eta(10,0);
+std::vector<double> jethelperAK5_phi(10,0);
+std::vector<double> jethelperAK5_energy(10,0);
+std::vector<double> jethelperAK5_mass(10,0);
+
 
 std::vector<float>	jethelperAK7_combinedSecondaryVertexBJetTags(10,0);
 std::vector<float>	jethelperAK7_combinedSecondaryVertexMVABJetTags(10,0);
@@ -464,12 +486,6 @@ int	triggerresultshelper_HLT_HT650_v9;
 int	triggerresultshelper_HLT_HT750_v1;
 int	triggerresultshelper_HLT_HT750_v2;
 int	triggerresultshelper_HLT_HT750_v3;
-int	triggerresultshelper_HLT_HT750_v4;
-int	triggerresultshelper_HLT_HT750_v5;
-int	triggerresultshelper_HLT_HT750_v6;
-int	triggerresultshelper_HLT_HT750_v7;
-int	triggerresultshelper_HLT_HT750_v8;
-int	triggerresultshelper_HLT_HT750_v9;
 int	triggerresultshelper_HLT_PFHT350_v1;
 int	triggerresultshelper_HLT_PFHT350_v2;
 int	triggerresultshelper_HLT_PFHT350_v3;
@@ -487,12 +503,6 @@ int	triggerresultshelper_HLT_PFHT650_v8;
 int	triggerresultshelper_HLT_PFHT650_v9;
 int	triggerresultshelper_HLT_PFHT650_v10;
 int	triggerresultshelper_HLT_PFHT650_v11;
-int	triggerresultshelper_HLT_PFNoPUHT650_v1;
-int	triggerresultshelper_HLT_PFNoPUHT650_v2;
-int	triggerresultshelper_HLT_PFNoPUHT650_v3;
-int	triggerresultshelper_HLT_PFNoPUHT650_v4;
-int	triggerresultshelper_HLT_PFNoPUHT650_v5;
-int	triggerresultshelper_HLT_PFNoPUHT650_v6;
 int	triggerresultshelper_HLT_PFHT700_v1;
 int	triggerresultshelper_HLT_PFHT700_v2;
 int	triggerresultshelper_HLT_PFHT700_v3;

@@ -9,7 +9,7 @@
 
 #include <fastjet/PseudoJet.hh>
 #include "Njettiness.hh"
-#include "GeneralizedEnergyCorrelator.hh"
+#include "EnergyCorrelator.hh"
 
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequenceArea.hh"
@@ -280,7 +280,7 @@ float JetHelper::getC2beta(float beta) const
     fastjet::JetDefinition jet_def(fastjet::cambridge_algorithm, 2.0);
     fastjet::ClusterSequence clust_seq(FJparticles, jet_def);
     vector<fastjet::PseudoJet> incluisve_jets = clust_seq.inclusive_jets(0);
-    fastjet::GeneralizedEnergyCorrelatorRatio C2beta(2,beta,fastjet::pT_R);
+    contrib::EnergyCorrelatorRatio C2beta(2,beta,contrib::EnergyCorrelator::pt_R);
     return C2beta(incluisve_jets[0]);
 }
 
@@ -299,7 +299,7 @@ float JetHelper::getGenC2beta(float beta, bool CHS) const
     fastjet::JetDefinition jet_def(fastjet::cambridge_algorithm, 2.0);
     fastjet::ClusterSequence clust_seq(FJparticles, jet_def);
     vector<fastjet::PseudoJet> incluisve_jets = clust_seq.inclusive_jets(0);
-    fastjet::GeneralizedEnergyCorrelatorRatio C2beta(2,beta,fastjet::pT_R);
+    contrib::EnergyCorrelatorRatio C2beta(2,beta,contrib::EnergyCorrelator::pt_R);
     return C2beta(incluisve_jets[0]);
 }
 

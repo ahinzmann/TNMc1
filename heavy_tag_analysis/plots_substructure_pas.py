@@ -26,7 +26,7 @@ TGaxis.SetMaxDigits(3)
 if __name__ == '__main__':
 
  theory=False
- runSet=3
+ runSet=10
 
  names = ["npu",
            "npv",
@@ -306,6 +306,16 @@ if __name__ == '__main__':
   styles=[2,3]
   widths=[2,1]
   sets=["gluon",""]
+
+
+ if runSet==10:
+  samples = ["substructure_pas_WWBulk1000.root",
+             "substructure_pas_WWBulk1000_fastjetcontrib.root",
+             ]
+  colors=[1,2]
+  styles=[2,2]
+  widths=[2,2]
+  sets=["Gen"]
 
 
  results=[]

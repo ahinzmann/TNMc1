@@ -32,7 +32,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 namespace contrib{
 
-// forward declaration of assitional class(es) defined below.
+// forward declaration of assistional class(es) defined below.
 class GenericSubtractorInfo;
 
 
@@ -44,14 +44,21 @@ class GenericSubtractorInfo;
 ///
 /// This class is a tool that allows one to subtract jet shapes
 /// (i.e. a FunctionOfPseudoJet<double>). It implements the method
-/// described in arXiv:1211.2811, by Gregory Soyez, Gavin P. Salam,
-/// Jihun Kim, Souvik Dutta and Matteo Cacciari.
+/// described in:
+/// Gregory Soyez, Gavin P. Salam, Jihun Kim, Souvik Dutta and Matteo Cacciari,
+/// Phys. Rev. Lett. 110, 162001 (2013) [arXiv:1211.2811]
 ///
-/// The basic usage of this class goes as follows:
+/// The basic usage of this class is as follows:
 ///
 ///   GenericSubtractor gensub(& _some_background_estimator);
 ///   FunctionOfPseudoJet<double> shape;
 ///   double subtracted_shape_value = gensub(shape, jet);
+///
+/// If the background transverse momentum density rho (and optionally the 
+/// density of sqrt(pt^2+m^2) - pt, denoted by rhom) are known, the
+/// subtractor can be constructed directly as
+///
+///   GenericSubtractor gensub(rho,rhom);
 ///
 /// Extra information can be retrieved using
 ///
@@ -63,16 +70,23 @@ public:
   /// default constructor
   /// leaves the object unusable
   GenericSubtractor() : 
-    _bge_rho(0), _bge_rhom(0), _jet_pt_fraction(0.01), _common_bge(false){}
+    _bge_rho(0), _bge_rhom(0), _jet_pt_fraction(0.01), _common_bge(false), 
+    _rho(_invalid_rho), _externally_supplied_rho_rhom(false) {}
 
   /// Constructor that takes a pointer to a background estimator for
   /// rho and optionally a pointer to a background estimator for
-  /// rho_m.  If the latter is not supplies, rho_m is assumed to
+  /// rho_m.  If the latter is not supplied, rho_m is assumed to
   /// always be zero (this behaviour can be changed by calling
   /// use_common_bge_for_rho_and_rhom).
   GenericSubtractor(BackgroundEstimatorBase *bge_rho,
-		    BackgroundEstimatorBase *bge_rhom=0)
-    : _bge_rho(bge_rho), _bge_rhom(bge_rhom), _jet_pt_fraction(0.01), _common_bge(false){}
+		    BackgroundEstimatorBase *bge_rhom=0) :
+    _bge_rho(bge_rho), _bge_rhom(bge_rhom), _jet_pt_fraction(0.01), _common_bge(false), 
+     _rho(_invalid_rho), _externally_supplied_rho_rhom(false)  {}
+
+  /// Constructor that takes an externally supplied value for rho and,
+  /// optionally, for rho_m. The latter defaults to zero.
+  GenericSubtractor(double rho, double rhom=0);
+  
 
   /// destructor
   ~GenericSubtractor(){}
@@ -88,7 +102,8 @@ public:
   /// returns the estimate of the supplied shape, for the given jet,
   /// after background subtraction. It also sets the "info" variable
   /// with information about the details of the subtraction (e.g. the
-  /// shape's derivatives wrt to the amount of pileup).
+  /// shape's derivatives wrt to the amount of pileup, and the background
+  /// densities used).
   double operator()(const FunctionOfPseudoJet<double> & shape,
 		    const PseudoJet & jet, GenericSubtractorInfo & info) const;
 
@@ -97,13 +112,13 @@ public:
   /// calculated from the same background estimator as rho, instead of
   /// being set to zero. 
   ///
-  /// Currently his only works if the estimator is a
+  /// Currently this only works if the estimator is a
   /// JetMedianBackgroundEstimator (or derived from it), and makes use
   /// of that class's set_jet_density_class(...) facility.
   /// 
   void use_common_bge_for_rho_and_rhom(bool value=true);
 
-  /// set the fraction of the jet pt that will be used in the
+  /// sets the fraction of the jet pt that will be used in the
   /// stability condition when computing the derivatives
   void set_jet_pt_fraction_for_stability(double jet_pt_fraction){
     _jet_pt_fraction=jet_pt_fraction;
@@ -156,6 +171,16 @@ protected:
   BackgroundEstimatorBase *_bge_rho, *_bge_rhom;
   double _jet_pt_fraction;
   bool _common_bge;
+  double _rho, _rhom;
+  bool _externally_supplied_rho_rhom;
+  /// a value of rho that is used as a default to label that the stored
+  /// rho is not valid for subtraction. 
+  //
+  // NB: there are two reasons for not having the value written here:
+  // 1) that it caused problems on karnak with g++ 4.0.1 and 2) that
+  // we anyway like -infinity as a default, and since that's a function,
+  // that's not allowed in an include file.
+  static const double _invalid_rho;
 };
 
 //------------------------------------------------------------------------
@@ -203,7 +228,10 @@ public:
   /// returns the ghost scale actually used for the computation
   double ghost_scale_used() const{ return _ghost_scale_used;}
 
-
+  /// return the value of rho and rhom used in the subtraction
+  double rho() const  { return _rho;  }
+  double rhom() const { return _rhom; }
+  
 protected:
   double _unsubtracted;
   double _first_order_subtracted;
@@ -211,6 +239,7 @@ protected:
   double _third_order_subtracted;
   double _first_derivative, _second_derivative, _third_derivative;
   double _ghost_scale_used;
+  double _rho, _rhom;
 
   friend class GenericSubtractor;
 };

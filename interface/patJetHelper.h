@@ -243,14 +243,20 @@ namespace pat
         float getDaughter_1_jetCharge(float kappa) const;
 
         float getC2beta(float beta) const;
+        float C2beta05() const { return getC2beta(0.5); };
+        float C2beta10() const { return getC2beta(1.0); };
         float C2beta15() const { return getC2beta(1.5); };
         float C2beta17() const { return getC2beta(1.7); };
         float C2beta20() const { return getC2beta(2.0); };
+        float C2beta25() const { return getC2beta(2.5); };
 
         float getGenC2beta(float beta, bool CHS=false) const;
+        float genC2beta05() const { return getGenC2beta(0.5); };
+        float genC2beta10() const { return getGenC2beta(1.0); };
         float genC2beta15() const { return getGenC2beta(1.5); };
         float genC2beta17() const { return getGenC2beta(1.7); };
         float genC2beta20() const { return getGenC2beta(2.0); };
+        float genC2beta25() const { return getGenC2beta(2.5); };
         float genC2beta17CHS() const { return getGenC2beta(1.7,true); };
 
         float jetCharge03() const { return getJetCharge(0.3); };
