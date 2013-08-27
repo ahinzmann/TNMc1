@@ -26,16 +26,24 @@ TGaxis.SetMaxDigits(3)
 if __name__ == '__main__':
 
  #scenario="_lowPU"
- scenario=""
- #scenario="_Gen_prunedmass"
+ #scenario=""
+ scenario="_Gen_prunedmass"
  #scenario="_Gen_mass"
  #scenario="_Gen"
  
  particle="WW"
  #particle="ZZ"
 
- samples = ["~/workspace/substructure/substructure_pas_QCD500.root",
-             "~/workspace/substructure/substructure_pas_QCD1000.root",
+ samples = [#"~/workspace/substructure/substructure_pas_QCD500.root",
+             #"~/workspace/substructure/substructure_pas_QCD1000.root",
+             "substructure_pas_QCDPythia8170.root",
+             "substructure_pas_QCDPythia8300.root",
+             "substructure_pas_QCDPythia8470.root",
+             "substructure_pas_QCDPythia8600.root",
+             "substructure_pas_QCDPythia8800.root",
+             "substructure_pas_QCDPythia81000.root",
+             "substructure_pas_QCDPythia81400.root",
+             "substructure_pas_QCDPythia81800.root",
             ]
 
  if particle=="WW":
@@ -48,16 +56,41 @@ if __name__ == '__main__':
  plots=[("Jet1Nsub","#tau_{2}/#tau_{1}",-1,10,False),
         ("Jet1NsubPruned","pruned #tau_{2}/#tau_{1}",-1,10,False),
         ("Jet1MassDrop","mass drop",-1,10,False),
+        ("Jet1C2beta05","C_{2} (#beta=0.5)",-1,10,False),
+        ("Jet1C2beta10","C_{2} (#beta=1.0)",-1,10,False),
+        ("Jet1C2beta15","C_{2} (#beta=1.5)",-1,10,False),
         ("Jet1C2beta17","C_{2} (#beta=1.7)",-1,10,False),
+        ("Jet1C2beta20","C_{2} (#beta=2.0)",-1,10,False),
+        ("Jet1C2beta25","C_{2} (#beta=2.5)",-1,10,False),
         ]
 
+ names = ["tau21",
+	   "tau21pruned",
+	   "massdrop",
+	   "C2beta05",
+	   "C2beta10",
+	   "C2beta15",
+	   "C2beta17",
+	   "C2beta20",
+	   "C2beta25",
+         ]
+
+ colors=[1,2,4,6,7,1,2,4,6,7]
+ widths=[2,2,2,2,2,1,1,1,1,1]
+ styles=[1,1,1,1,1,2,2,2,2,2]
+           
  if scenario=="_Gen":
   selection_mass=""
   selection="(abs(GenJet1eta)<2.4)&&(deta<1.3)&&(GenDijetMass>890)&&(GenJet1pt>400)&&(GenJet1pt<600)"
   plots=[("GenJet1Nsub","#tau_{2}/#tau_{1}",-1,10,False),
         ("GenJet1NsubPruned","pruned #tau_{2}/#tau_{1}",-1,10,False),
         ("GenJet1MassDrop","mass drop",-1,10,False),
+        ("GenJet1C2beta05","C_{2} (#beta=0.5)",-1,10,False),
+        ("GenJet1C2beta10","C_{2} (#beta=1.0)",-1,10,False),
+        ("GenJet1C2beta15","C_{2} (#beta=1.5)",-1,10,False),
         ("GenJet1C2beta17","C_{2} (#beta=1.7)",-1,10,False),
+        ("GenJet1C2beta20","C_{2} (#beta=2.0)",-1,10,False),
+        ("GenJet1C2beta25","C_{2} (#beta=2.5)",-1,10,False),
         ]
 
  if scenario=="_Gen_mass":
@@ -69,19 +102,29 @@ if __name__ == '__main__':
   plots=[("GenJet1Nsub","#tau_{2}/#tau_{1}",-1,10,False),
         ("GenJet1NsubPruned","pruned #tau_{2}/#tau_{1}",-1,10,False),
         ("GenJet1MassDrop","mass drop",-1,10,False),
+        ("GenJet1C2beta05","C_{2} (#beta=0.5)",-1,10,False),
+        ("GenJet1C2beta10","C_{2} (#beta=1.0)",-1,10,False),
+        ("GenJet1C2beta15","C_{2} (#beta=1.5)",-1,10,False),
         ("GenJet1C2beta17","C_{2} (#beta=1.7)",-1,10,False),
+        ("GenJet1C2beta20","C_{2} (#beta=2.0)",-1,10,False),
+        ("GenJet1C2beta25","C_{2} (#beta=2.5)",-1,10,False),
         ]
 
  if scenario=="_Gen_prunedmass":
   if particle=="ZZ":
-     selection_mass="&&(Jet1Mass>80)&&(Jet1Mass<100)"
+     selection_mass="&&(Jet1Mass>70)&&(Jet1Mass<110)"
   if particle=="WW":
-     selection_mass="&&(Jet1Mass>70)&&(Jet1Mass<90)"
+     selection_mass="&&(Jet1Mass>60)&&(Jet1Mass<100)"
   selection="(abs(GenJet1eta)<2.4)&&(deta<1.3)&&(GenDijetMass>890)&&(GenJet1pt>400)&&(GenJet1pt<600)"
   plots=[("GenJet1Nsub","#tau_{2}/#tau_{1}",-1,10,False),
         ("GenJet1NsubPruned","pruned #tau_{2}/#tau_{1}",-1,10,False),
         ("GenJet1MassDrop","mass drop",-1,10,False),
+        ("GenJet1C2beta05","C_{2} (#beta=0.5)",-1,10,False),
+        ("GenJet1C2beta10","C_{2} (#beta=1.0)",-1,10,False),
+        ("GenJet1C2beta15","C_{2} (#beta=1.5)",-1,10,False),
         ("GenJet1C2beta17","C_{2} (#beta=1.7)",-1,10,False),
+        ("GenJet1C2beta20","C_{2} (#beta=2.0)",-1,10,False),
+        ("GenJet1C2beta25","C_{2} (#beta=2.5)",-1,10,False),
         ]
 
  if scenario=="_lowPU":
@@ -95,7 +138,7 @@ if __name__ == '__main__':
         ("Jet1C2beta17","C_{2} (#beta=1.7) <PU>=12",-1,10,False,"lowPU"),
         ]
 
- names = ["tau21",
+   names = ["tau21",
 	   "tau21pruned",
 	   "massdrop",
 	   "C2beta17",
@@ -105,9 +148,9 @@ if __name__ == '__main__':
 	   "C2beta17_lowPU",
 	   ]
 
- colors=[1,2,4,6,1,2,4,6]
- widths=[2,2,2,2,1,1,1,1]
- styles=[1,2,3,4,1,2,3,4]
+   colors=[1,2,4,6,1,2,4,6]
+   widths=[2,2,2,2,1,1,1,1]
+   styles=[1,2,3,4,1,2,3,4]
 
  results=[]
 
@@ -125,11 +168,13 @@ if __name__ == '__main__':
     f=TFile.Open(sample)
     tree=f.Get("dijetWtag")
     hist=TH1F("DijetMass","DijetMass",10000,0,10000);
+    print sample,"DijetMass",selection
     tree.Project("DijetMass","DijetMass",selection)
     before=hist.Integral()
     print "before mass cut",before
     histname="plot"+names[plots.index(plot)]
     hist=TH1F(histname,histname,10000,plot[2],plot[3]);
+    print sample,plot[0],selection+selection_mass
     tree.Project(histname,plot[0],selection+selection_mass)
     after=hist.Integral()
     print "after mass cut",after
@@ -139,7 +184,20 @@ if __name__ == '__main__':
         integral+=[hist.Integral(b+1,hist.GetNbinsX())]
       else:
         integral+=[hist.Integral(0,b+1)]
-    if "QCD1000" in sample:
+    if "QCDPythia8" in sample and not "170" in sample:
+        samplenames=["170","300","470","600","800","1000","1400","1800"]
+	samplenumbers=[800046,490042,500051,492988,400059,400050,200070,194313]
+	samplecrossections=[37974.99,1938.868,124.8942,29.55049,3.871308,0.8031018,0.03637225,0.00197726]
+	samplenumber=0
+        for samplename in samplenames:
+          if samplename in sample:
+            samplenumber=samplenames.index(samplename)
+        weight=samplecrossections[samplenumber]/samplenumbers[samplenumber]*samplenumbers[0]/samplecrossections[0]
+        event_count[-1][0]+=before*weight
+        event_count[-1][1]+=after*weight
+        for b in range(hist.GetNbinsX()):
+            event_count[-1][2][b]+=integral[b]*weight
+    elif "QCD1000" in sample:
        weight=204.0/13798133*30522161/8426.0
        event_count[-1][0]+=before*weight
        event_count[-1][1]+=after*weight
