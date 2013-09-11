@@ -516,6 +516,13 @@ int main(int argc, char** argv)
   double nJetsCA8;
   double nGenJetsCA8;
   double weight;
+  double Jet1MassSubjet;
+  double Jet1Sj1AngleResolution;
+  double Jet1Sj1PtResolution;
+  double Jet1Sj1MassResolution;
+  double Jet1MassGenSubjetAngle;
+  double Jet1MassGenSubjetPt;
+  double Jet1MassGenSubjetMass;
   double Jet1CA8MassDrop;
   double Jet1CA8Nsub;
   double Jet1CA8NsubPruned;
@@ -548,6 +555,13 @@ int main(int argc, char** argv)
   dijetWtag->Branch("Jet1eta",&jethelperCA8_eta[0],"Jet1eta/D");
   dijetWtag->Branch("Jet1phi",&jethelperCA8_phi[0],"Jet1phi/D");
   dijetWtag->Branch("Jet1Mass",&jethelperCA8pruned_mass[0],"Jet1Mass/D");
+  dijetWtag->Branch("Jet1MassSubjet",&Jet1MassSubjet,"Jet1MassSubjet/D");
+  dijetWtag->Branch("Jet1Sj1AngleResolution",&Jet1Sj1AngleResolution,"Jet1Sj1AngleResolution/D");
+  dijetWtag->Branch("Jet1Sj1PtResolution",&Jet1Sj1PtResolution,"Jet1Sj1PtResolution/D");
+  dijetWtag->Branch("Jet1Sj1MassResolution",&Jet1Sj1MassResolution,"Jet1Sj1MassResolution/D");
+  dijetWtag->Branch("Jet1MassGenSubjetAngle",&Jet1MassGenSubjetAngle,"Jet1MassGenSubjetAngle/D");
+  dijetWtag->Branch("Jet1MassGenSubjetPt",&Jet1MassGenSubjetPt,"Jet1MassGenSubjetPt/D");
+  dijetWtag->Branch("Jet1MassGenSubjetMass",&Jet1MassGenSubjetMass,"Jet1MassGenSubjetMass/D");
   dijetWtag->Branch("Jet1UnGroomedMass",&jethelperCA8_mass[0],"Jet1UnGroomedMass/D");
   dijetWtag->Branch("Jet1MassDrop",&Jet1CA8MassDrop,"Jet1MassDrop/D");
   dijetWtag->Branch("Jet1Nsub",&Jet1CA8Nsub,"Jet1Nsub/D");
@@ -646,6 +660,70 @@ int main(int argc, char** argv)
 	         nJetsCA8++;
           Jet1CA8MassDrop = max(jethelperCA8pruned_daughter_0_mass[0],jethelperCA8pruned_daughter_1_mass[0])/jethelperCA8pruned_mass[0]/jethelperCA8pruned_uncor_pt[0]*jethelperCA8pruned_pt[0];
 	  if ((jethelperCA8pruned_daughter_0_mass[0]<0.0001)||(jethelperCA8pruned_daughter_1_mass[0]<0.0001)) Jet1CA8MassDrop = 2;
+
+          double Subjet1Dr=1;
+          double Subjet1Pt=0;
+          double Subjet1Eta=0;
+          double Subjet1Phi=0;
+          double Subjet1Mass=0;
+          double Subjet2Dr=1;
+          double Subjet2Pt=0;
+          double Subjet2Eta=0;
+          double Subjet2Phi=0;
+          double Subjet2Mass=0;
+	  for(unsigned n=0;n<jethelperGenCA8pruned_daughter_0_pt.size();n++)
+	  {
+           if (DeltaRfun(jethelperGenCA8pruned_daughter_0_eta[n],jethelperCA8pruned_daughter_0_eta[0],jethelperGenCA8pruned_daughter_0_phi[n],jethelperCA8pruned_daughter_0_phi[0])<Subjet1Dr)
+	   {
+             Subjet1Dr=DeltaRfun(jethelperGenCA8pruned_daughter_0_eta[n],jethelperCA8pruned_daughter_0_eta[0],jethelperGenCA8pruned_daughter_0_phi[n],jethelperCA8pruned_daughter_0_phi[0]);
+             Subjet1Pt=jethelperGenCA8pruned_daughter_0_pt[n];
+             Subjet1Eta=jethelperGenCA8pruned_daughter_0_eta[n];
+             Subjet1Phi=jethelperGenCA8pruned_daughter_0_phi[n];
+             Subjet1Mass=jethelperGenCA8pruned_daughter_0_mass[n];
+	   }
+           if (DeltaRfun(jethelperGenCA8pruned_daughter_0_eta[n],jethelperCA8pruned_daughter_1_eta[0],jethelperGenCA8pruned_daughter_0_phi[n],jethelperCA8pruned_daughter_1_phi[0])<Subjet2Dr)
+	   {
+             Subjet2Dr=DeltaRfun(jethelperGenCA8pruned_daughter_0_eta[n],jethelperCA8pruned_daughter_1_eta[0],jethelperGenCA8pruned_daughter_0_phi[n],jethelperCA8pruned_daughter_1_phi[0]);
+             Subjet2Pt=jethelperGenCA8pruned_daughter_0_pt[n];
+             Subjet2Eta=jethelperGenCA8pruned_daughter_0_eta[n];
+             Subjet2Phi=jethelperGenCA8pruned_daughter_0_phi[n];
+             Subjet2Mass=jethelperGenCA8pruned_daughter_0_mass[n];
+	   }
+           if (DeltaRfun(jethelperGenCA8pruned_daughter_1_eta[n],jethelperCA8pruned_daughter_0_eta[0],jethelperGenCA8pruned_daughter_1_phi[n],jethelperCA8pruned_daughter_0_phi[0])<Subjet1Dr)
+           {
+	     Subjet1Dr=DeltaRfun(jethelperGenCA8pruned_daughter_1_eta[n],jethelperCA8pruned_daughter_0_eta[0],jethelperGenCA8pruned_daughter_1_phi[n],jethelperCA8pruned_daughter_0_phi[0]);
+	     Subjet1Pt=jethelperGenCA8pruned_daughter_1_pt[n];
+             Subjet1Eta=jethelperGenCA8pruned_daughter_1_eta[n];
+             Subjet1Phi=jethelperGenCA8pruned_daughter_1_phi[n];
+             Subjet1Mass=jethelperGenCA8pruned_daughter_1_mass[n];
+	   }
+           if (DeltaRfun(jethelperGenCA8pruned_daughter_1_eta[n],jethelperCA8pruned_daughter_1_eta[0],jethelperGenCA8pruned_daughter_1_phi[n],jethelperCA8pruned_daughter_1_phi[0])<Subjet2Dr)
+           {
+	     Subjet2Dr=DeltaRfun(jethelperGenCA8pruned_daughter_1_eta[n],jethelperCA8pruned_daughter_1_eta[0],jethelperGenCA8pruned_daughter_1_phi[n],jethelperCA8pruned_daughter_1_phi[0]);
+	     Subjet2Pt=jethelperGenCA8pruned_daughter_1_pt[n];
+             Subjet2Eta=jethelperGenCA8pruned_daughter_1_eta[n];
+             Subjet2Phi=jethelperGenCA8pruned_daughter_1_phi[n];
+             Subjet2Mass=jethelperGenCA8pruned_daughter_1_mass[n];
+	   }
+          }
+
+          Jet1Sj1AngleResolution=DeltaRfun(Subjet1Eta,jethelperCA8pruned_daughter_0_eta[0],Subjet1Phi,jethelperCA8pruned_daughter_0_phi[0]);
+          Jet1Sj1PtResolution=jethelperCA8pruned_daughter_0_pt[0]-Subjet1Pt;
+          Jet1Sj1MassResolution=jethelperCA8pruned_daughter_0_mass[0]-Subjet1Mass;
+          TLorentzVector SubJet1;
+          TLorentzVector SubJet2;
+	  SubJet1.SetPtEtaPhiE(jethelperCA8pruned_daughter_0_pt[0],jethelperCA8pruned_daughter_0_eta[0],jethelperCA8pruned_daughter_0_phi[0],jethelperCA8pruned_daughter_0_energy[0]);
+          SubJet2.SetPtEtaPhiE(jethelperCA8pruned_daughter_1_pt[0],jethelperCA8pruned_daughter_1_eta[0],jethelperCA8pruned_daughter_1_phi[0],jethelperCA8pruned_daughter_1_energy[0]);
+          Jet1MassSubjet = (SubJet1+SubJet2).M();
+	  SubJet1.SetPtEtaPhiM(Subjet1Pt,jethelperCA8pruned_daughter_0_eta[0],jethelperCA8pruned_daughter_0_phi[0],Subjet1Mass);
+          SubJet2.SetPtEtaPhiM(Subjet2Pt,jethelperCA8pruned_daughter_1_eta[0],jethelperCA8pruned_daughter_1_phi[0],Subjet2Mass);
+          Jet1MassGenSubjetPt = (SubJet1+SubJet2).M();
+	  SubJet1.SetPtEtaPhiE(jethelperCA8pruned_daughter_0_pt[0],Subjet1Eta,Subjet1Phi,jethelperCA8pruned_daughter_0_energy[0]);
+          SubJet2.SetPtEtaPhiE(jethelperCA8pruned_daughter_1_pt[0],Subjet2Eta,Subjet2Phi,jethelperCA8pruned_daughter_1_energy[0]);
+          Jet1MassGenSubjetAngle = (SubJet1+SubJet2).M();
+SubJet1.SetPtEtaPhiM(jethelperCA8pruned_daughter_0_pt[0],jethelperCA8pruned_daughter_0_eta[0],jethelperCA8pruned_daughter_0_phi[0],Subjet1Mass);
+          SubJet2.SetPtEtaPhiM(jethelperCA8pruned_daughter_1_pt[0],jethelperCA8pruned_daughter_1_eta[0],jethelperCA8pruned_daughter_1_phi[0],Subjet2Mass);
+          Jet1MassGenSubjetMass = (SubJet1+SubJet2).M();
           Jet1CA8Nsub = jethelperCA8_tau2[0]/jethelperCA8_tau1[0];
           Jet1CA8NsubPruned = jethelperCA8pruned_tau2[0]/jethelperCA8pruned_tau1[0];
           }           
@@ -759,8 +837,6 @@ if(((abs(genparticlehelper_pdgId[i])==9)||(abs(genparticlehelper_pdgId[i])==21))
               Gendeta = fabs(jethelperGenCA8_eta[0]-jethelperGenCA8_eta[1]);
           }
 
-          //std::cerr << jethelperCA8_pt.size() << "," << jethelperCA8_pt[0]  << "," << (fabs(jethelperCA8_eta[0])) << std::endl;
-
 	  if(!((((jethelperCA8_pt.size()>=2)&&(jethelperCA8_pt[0]>400)&&(fabs(jethelperCA8_eta[0])<2.5))||
 	        ((jethelperGenCA8_pt.size()>=2)&&(jethelperGenCA8_pt[0]>400)&&(fabs(jethelperGenCA8_eta[0])<2.5)))&&
 	     
@@ -791,6 +867,11 @@ if(((abs(genparticlehelper_pdgId[i])==9)||(abs(genparticlehelper_pdgId[i])==21))
 	  // -- fill histograms --
 	  // ---------------------	  
 
+          /*if((jethelperCA8pruned_mass[0]>40)&&(jethelperCA8pruned_mass[0]<60)&&
+	  (jethelperGenCA8pruned_mass[0]>70)&&(jethelperGenCA8pruned_mass[0]<100)&&
+	  (abs(jethelperCA8_eta[0])<2.4)&&(deta<1.3)&&(DijetMassCA8>890)&&(jethelperCA8_pt[0]>1100)&&(jethelperCA8_pt[0]<1400))
+             std::cout << eventhelper_run << ":" << eventhelper_luminosityBlock << ":" << eventhelper_event << "," << jethelperCA8_pt[0]  << "," << (fabs(jethelperCA8_eta[0])) << "," << jethelperCA8pruned_mass[0] << std::endl;
+          */
           if(geneventinfoproduct_weight>0)
 	      weight=geneventinfoproduct_weight;
 	  else

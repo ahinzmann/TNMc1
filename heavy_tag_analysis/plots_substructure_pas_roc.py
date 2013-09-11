@@ -36,14 +36,14 @@ if __name__ == '__main__':
 
  samples = [#"~/workspace/substructure/substructure_pas_QCD500.root",
              #"~/workspace/substructure/substructure_pas_QCD1000.root",
-             "substructure_pas_QCDPythia8170.root",
-             "substructure_pas_QCDPythia8300.root",
-             "substructure_pas_QCDPythia8470.root",
-             "substructure_pas_QCDPythia8600.root",
-             "substructure_pas_QCDPythia8800.root",
-             "substructure_pas_QCDPythia81000.root",
-             "substructure_pas_QCDPythia81400.root",
-             "substructure_pas_QCDPythia81800.root",
+             "~/workspace/substructure/substructure_pas_QCDPythia8170.root",
+             "~/workspace/substructure/substructure_pas_QCDPythia8300.root",
+             "~/workspace/substructure/substructure_pas_QCDPythia8470.root",
+             "~/workspace/substructure/substructure_pas_QCDPythia8600.root",
+             "~/workspace/substructure/substructure_pas_QCDPythia8800.root",
+             "~/workspace/substructure/substructure_pas_QCDPythia81000.root",
+             "~/workspace/substructure/substructure_pas_QCDPythia81400.root",
+             "~/workspace/substructure/substructure_pas_QCDPythia81800.root",
             ]
 
  if particle=="WW":
@@ -112,9 +112,9 @@ if __name__ == '__main__':
 
  if scenario=="_Gen_prunedmass":
   if particle=="ZZ":
-     selection_mass="&&(Jet1Mass>70)&&(Jet1Mass<110)"
+     selection_mass="&&(GenJet1Mass>70)&&(GenJet1Mass<110)"
   if particle=="WW":
-     selection_mass="&&(Jet1Mass>60)&&(Jet1Mass<100)"
+     selection_mass="&&(GenJet1Mass>60)&&(GenJet1Mass<100)"
   selection="(abs(GenJet1eta)<2.4)&&(deta<1.3)&&(GenDijetMass>890)&&(GenJet1pt>400)&&(GenJet1pt<600)"
   plots=[("GenJet1Nsub","#tau_{2}/#tau_{1}",-1,10,False),
         ("GenJet1NsubPruned","pruned #tau_{2}/#tau_{1}",-1,10,False),

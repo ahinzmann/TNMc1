@@ -26,7 +26,7 @@ TGaxis.SetMaxDigits(3)
 if __name__ == '__main__':
 
  theory=False
- runSet=10
+ runSet=14
 
  names = ["npu",
            "npv",
@@ -318,6 +318,66 @@ if __name__ == '__main__':
   sets=["Gen"]
 
 
+ if runSet==11:
+  samples = ["substructure_pas_WWHpp3000.root",
+             "substructure_pas_WWHppNoCHS3000.root",
+             ]
+  #colors=[1,1,2,2]
+  #styles=[2,1,2,1]
+  #widths=[1,2,1,2]
+  #sets=[""]
+  colors=[1,1,4,4,2,2,6,6]
+  styles=[2,1,2,1,2,1,2,1]
+  widths=[1,1,2,2,1,1,2,2]
+  sets=["Gen",""]
+
+ if runSet==12:
+  samples = ["substructure_pas_WWHppPF2500.root",
+             "substructure_pas_WWHppCalo2500.root",
+             ]
+  #colors=[1,1,2,2]
+  #styles=[2,1,2,1]
+  #widths=[1,2,1,2]
+  #sets=[""]
+  colors=[1,1,4,4,2,2,6,6]
+  styles=[2,1,2,1,2,1,2,1]
+  widths=[1,1,2,2,1,1,2,2]
+  sets=["Gen",""]
+
+ if runSet==13:
+  samples = ["substructure_pas_WWHpp3000.root",
+             #"substructure_pas_WWHppCalo2500.root",
+             ]
+  colors=[1,1,4,4,2,2,6,6]
+  styles=[2,1,2,1,2,1,2,1]
+  widths=[1,1,2,2,1,1,2,2]
+  sets=["Gen","","Subjet","Angle","Pt","Mass"]
+
+  plots = [("Jet1Mass","((abs(Jet1eta)<2.4)&&(deta<1.3)&&(DijetMass>890)&&(Jet1pt>400)&&(Jet1pt<600))","pruned jet mass (GeV)", ),
+           ]
+
+  names = ["PrunedMass",
+	   ]
+
+ if runSet==14:
+  samples = ["substructure_pas_WWHpp3000.root",
+             #"substructure_pas_WWHppCalo2500.root",
+             ]
+  colors=[1,1,4,4,2,2,6,6]
+  styles=[2,1,2,1,2,1,2,1]
+  widths=[1,1,2,2,1,1,2,2]
+  sets=["","MassWindow"]
+
+  plots = [("Jet1Sj1AngleResolution","((abs(Jet1eta)<2.4)&&(deta<1.3)&&(DijetMass>890)&&(Jet1pt>400)&&(Jet1pt<600))","sj angular resolution", ),
+           ("Jet1Sj1PtResolution","((abs(Jet1eta)<2.4)&&(deta<1.3)&&(DijetMass>890)&&(Jet1pt>400)&&(Jet1pt<600))","sj p_{T} resolution (GeV)", ),
+           ("Jet1Sj1MassResolution","((abs(Jet1eta)<2.4)&&(deta<1.3)&&(DijetMass>890)&&(Jet1pt>400)&&(Jet1pt<600))","sj mass resolution (GeV)", ),
+           ]
+
+  names = ["Sj1AngleResolution",
+	   "Sj1PtResolution",
+	   "Sj1MassResolution",
+	   ]
+
  results=[]
  for plot in plots:
   if runSet==2:
@@ -374,6 +434,15 @@ if __name__ == '__main__':
 
     signal = "Hpp" in sample or "Py6" in sample
     histname="plot"+names[plots.index(plot)]+gen+str(s)
+    if "sj angular resolution" in plot[2]:
+       hist=TH1F(histname,histname,25,0,0.2);
+       hist.GetYaxis().SetRangeUser(0,50000)
+    if "sj p_{T} resolution (GeV)" in plot[2]:
+       hist=TH1F(histname,histname,25,-1000,1000);
+       hist.GetYaxis().SetRangeUser(0,50000)
+    if "sj mass resolution (GeV)" in plot[2]:
+       hist=TH1F(histname,histname,25,-50,50);
+       hist.GetYaxis().SetRangeUser(0,50000)
     if "cos #theta" in plot[2]:
        hist=TH1F(histname,histname,25,0,1);
        hist.GetYaxis().SetRangeUser(0,50000)
@@ -423,7 +492,7 @@ if __name__ == '__main__':
        hist=TH1F(histname,histname,25,0,250);
        hist.GetYaxis().SetRangeUser(0,50000)
     if "jet p_{T}" in plot[2]:
-       if runSet==3:
+       if runSet==3 or runSet==11 or runSet==12 or runSet==13 or runSet==14:
           hist=TH1F(histname,histname,40,0,3000);
        elif runSet==2:
           hist=TH1F(histname,histname,40,300,700);
@@ -455,6 +524,18 @@ if __name__ == '__main__':
         variable,cutstring=plot[0],plot[1]+"&&(nPU<17)"
     elif runSet==3 and (s==3 or s==4 or s==6):
         variable,cutstring=gen+plot[0],plot[1].replace("&&(Jet1pt>400)&&(Jet1pt<600)","&&(Jet1pt>1100)&&(Jet1pt<1400)")
+    elif gen=="Subjet":
+        variable,cutstring="Jet1MassSubjet",plot[1].replace("&&(Jet1pt>400)&&(Jet1pt<600)","")
+    elif gen=="Angle":
+        variable,cutstring="Jet1MassGenSubjetAngle",plot[1].replace("&&(Jet1pt>400)&&(Jet1pt<600)","")
+    elif gen=="Pt":
+        variable,cutstring="Jet1MassGenSubjetPt",plot[1].replace("&&(Jet1pt>400)&&(Jet1pt<600)","")
+    elif gen=="Mass":
+        variable,cutstring="Jet1MassGenSubjetMass",plot[1].replace("&&(Jet1pt>400)&&(Jet1pt<600)","")
+    elif gen=="MassWindow":
+        variable,cutstring=plot[0],plot[1].replace("&&(Jet1pt>400)&&(Jet1pt<600)","&&(Jet1pt>1100)&&(Jet1pt<1700)")+"&&(Jet1Mass>40)&&(Jet1Mass<60)"
+    elif runSet==11 or runSet==12 or runSet==13 or runSet==14:
+        variable,cutstring=gen+plot[0],plot[1].replace("&&(Jet1pt>400)&&(Jet1pt<600)","&&(Jet1pt>1100)&&(Jet1pt<1700)")
     elif runSet==4 and (counter==1 or counter==3):
         variable,cutstring=plot[0],plot[1]+"&&(abs(Jet1eta)<1.0)"
     elif gen=="GenPt2":
@@ -692,6 +773,29 @@ if __name__ == '__main__':
     if "WWHpp" in sample:
       if gen=="Gen" or runSet==2 or (runSet==8 and ("costheta" in names[plots.index(plot)] or "Phi" in names[plots.index(plot)] or "dR" in names[plots.index(plot)])):
         legend.AddEntry(hist,"X #rightarrow W_{T}W_{T} Herwig++","l")
+      elif runSet==11 and s==1:
+        legend.AddEntry(hist," + sim. with CHS","l")
+      elif runSet==11 and s==2:
+        legend.AddEntry(hist," + sim. no CHS","l")
+      elif runSet==12 and s==1:
+        legend.AddEntry(hist," + sim. PF","l")
+      elif runSet==12 and s==2:
+        legend.AddEntry(hist," + sim. Calo","l")
+      elif runSet==13 and gen=="":
+        legend.AddEntry(hist," reco fatjet","l")
+      elif runSet==13 and gen=="Subjet":
+        legend.AddEntry(hist," reco subjets","l")
+      elif runSet==13 and gen=="Angle":
+        legend.AddEntry(hist," gen sj-angles","l")
+      elif runSet==13 and gen=="Pt":
+        legend.AddEntry(hist," gen sj-energies","l")
+      elif runSet==13 and gen=="Mass":
+        legend.AddEntry(hist," gen sj-mass","l")
+	firsthist.GetYaxis().SetRangeUser(0,0.3)
+      elif runSet==14 and gen=="":
+        legend.AddEntry(hist," all","l")
+      elif runSet==14 and gen=="MassWindow":
+        legend.AddEntry(hist," 40 < m_{j} < 60 GeV","l")
       else:
         legend.AddEntry(hist," + <PU>=22 + sim.","l")
     counter+=1
@@ -710,6 +814,12 @@ if __name__ == '__main__':
     legend2.SetTextSize(0.03)
     legend2.SetFillStyle(0)
     legend2.Draw("same")
+
+  #if runSet==11:
+  #  legend2=TLegend(0.17,0.8,0.5,0.85,"1.4 < p_{T} < 1.6 TeV")
+  #  legend2.SetTextSize(0.03)
+  #  legend2.SetFillStyle(0)
+  #  legend2.Draw("same")
 
   legend2a=TLegend(0.24,0.75,0.5,0.8,"|#eta|<2.4")
   legend2a.SetTextSize(0.03)

@@ -49,6 +49,9 @@ samples = [
 #('/RSGravitonToWW_kMpl01_M-3000_Tune23_8TeV-herwigpp/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/PAT_CMG_V5_13_0/NTUPLE_Feb15',False,False,'ProductionTask'),
 #('/RSGravitonToZZ_kMpl01_M-3000_TuneZ2star_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/PAT_CMG_V5_13_0/NTUPLE_Feb15',False,False,'ProductionTask'),
 #('/RSGravitonToZZ_kMpl01_M-3000_Tune23_8TeV-herwigpp/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/PAT_CMG_V5_13_0/NTUPLE_Feb15',False,False,'ProductionTask'),
+
+('/RSGravitonToWW_kMpl01_M-3000_Tune23_8TeV-herwigpp/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/NTUPLE_Sep1NoCHS',False,False,'ProductionTaskTNM'),
+
 #('/WprimeToWZ_M-1000_TuneZ2star_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/PAT_CMG_V5_13_0/NTUPLE_Feb15',False,False,'ProductionTask'),
 #('/WprimeToWZ_M-1500_TuneZ2star_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/PAT_CMG_V5_13_0/NTUPLE_Feb15',False,False,'ProductionTask'),
 #('/WprimeToWZ_M-2000_TuneZ2star_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/PAT_CMG_V5_13_0/NTUPLE_Feb15',False,False,'ProductionTask'),
@@ -69,9 +72,9 @@ samples = [
 #('/QCD_Pt-470to600_Tune4C_8TeV_pythia8/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/NTUPLE_Aug5',False,False,'ProductionTaskTNM'),
 #('/QCD_Pt-600to800_Tune4C_8TeV_pythia8/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/NTUPLE_Aug5',False,False,'ProductionTaskTNM'),
 #('/QCD_Pt-800to1000_Tune4C_8TeV_pythia8/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/NTUPLE_Aug5',False,False,'ProductionTaskTNM'),
-('/QCD_Pt-1000to1400_Tune4C_8TeV_pythia8/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/NTUPLE_Aug5',False,False,'ProductionTaskTNM'),
-('/QCD_Pt-1400to1800_Tune4C_8TeV_pythia8/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/NTUPLE_Aug5',False,False,'ProductionTaskTNM'),
-('/QCD_Pt-1800_Tune4C_8TeV_pythia8/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/NTUPLE_Aug5',False,False,'ProductionTaskTNM'),
+#('/QCD_Pt-1000to1400_Tune4C_8TeV_pythia8/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/NTUPLE_Aug5',False,False,'ProductionTaskTNM'),
+#('/QCD_Pt-1400to1800_Tune4C_8TeV_pythia8/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/NTUPLE_Aug5',False,False,'ProductionTaskTNM'),
+#('/QCD_Pt-1800_Tune4C_8TeV_pythia8/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/NTUPLE_Aug5',False,False,'ProductionTaskTNM'),
 
 #('/Jet/Run2012A-22Jan2013-v1/AOD/NTUPLE_Aug5',False,False,'ProductionTaskTNM'),
 #('/HT/Run2012A-22Jan2013-v1/AOD/NTUPLE_Aug5',False,False,'ProductionTaskTNM'),

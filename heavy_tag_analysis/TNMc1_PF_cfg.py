@@ -12,18 +12,15 @@ process.MessageLogger.cerr.default.limit = 5
 # This is required in order to configure HLTConfigProducer
 process.load("L1TriggerConfig.L1GtConfigProducers.L1GtConfig_cff")
 
-
-# Get Will's SUSY MJ objects/sequences:
-process.load("Configuration.StandardSequences.GeometryDB_cff")
-#process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
-process.load("Configuration.StandardSequences.MagneticField_38T_cff")
-
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 # Run on MC or data
 
 runOnMC = True
 runPATCMG = True
+runPF = False
+runNoCHS = False
+runCaloJets = False
 recalibrateCMGJets = False
 runAK7jets = False
 runPrunedAK7jets = False
@@ -33,6 +30,7 @@ runPrunedAK5jets = True
 runQJets = False
 runOnVVtuples = False
 runOnCMGp = False
+writePatTuple = True
 
 if not runOnMC:
    runAK5genjets=False
@@ -63,6 +61,8 @@ process.source = datasetToSource(
     dataset_name,
     dataset_files,
     )
+
+process.source.fileNames=cms.untracked.vstring('file:///afs/cern.ch/user/h/hinzmann/workspace/RSGravitonToWW_kMpl01_M-2500_Tune23_8TeV-herwigpp-Summer12_DR53X-PU_S10_START53_V7A-v1-A25D0992-00C1-E211-8D70-E0CB4E29C4D8.root')
 
 if runOnVVtuples:
     #process.load("ExoDiBosonResonances/EDBRCommon/datasets/summer12_WJetsPt100_cff")
@@ -273,6 +273,26 @@ else:
 #    )
 #process.PATCMGSequence += process.puJetIdCA8CHS
 
+###REMOVE CHS
+
+if runNoCHS:
+    process.ca8PFJetsCHS.src = cms.InputTag("particleFlow")
+    process.ca8PFJetsCHSpruned.src = cms.InputTag("particleFlow")
+
+###RUN CALO jets
+
+if runCaloJets:
+    process.ca8PFJetsCHS.src = cms.InputTag("towerMaker")
+    process.ca8PFJetsCHS.srcPVs = cms.InputTag("offlinePrimaryVertices")
+    process.ca8PFJetsCHS.jetType = cms.string("CaloJet")
+    process.ca8PFJetsCHS.inputEtMin = cms.double(0.3)
+    process.ca8PFJetsCHS.doPVCorrection = cms.bool(True)
+    process.ca8PFJetsCHSpruned.src = cms.InputTag("towerMaker")
+    process.ca8PFJetsCHSpruned.srcPVs = cms.InputTag("offlinePrimaryVertices")
+    process.ca8PFJetsCHSpruned.jetType = cms.string("CaloJet")
+    process.ca8PFJetsCHSpruned.inputEtMin = cms.double(0.3)
+    process.ca8PFJetsCHSpruned.doPVCorrection = cms.bool(True)
+
 ##### Razor stuff
 
 process.load("CMGTools.Susy.RazorMultiJet.razorMultijet_cff")
@@ -316,10 +336,17 @@ process.p = cms.Path()
 process.schedule = cms.Schedule(process.p)
 if runPATCMG:
   process.load('CMGTools.Common.PAT.addFilterPaths_cff')
-  process.p = cms.Path(
-    process.PATCMGSequence + 
-    process.PATCMGJetCHSSequence 
-  )
+  process.p = cms.Path()
+  if runPF:
+     process.load("RecoParticleFlow.PFClusterProducer.particleFlowCluster_cff")
+     process.p += process.towerMakerPF
+     process.p += process.particleFlowCluster
+     process.load("RecoParticleFlow.PFProducer.particleFlowBlock_cff")
+     process.p += process.particleFlowBlock
+     process.load("RecoParticleFlow.PFProducer.particleFlow_cff")
+     process.p += process.particleFlowTmp
+  process.p += process.PATCMGSequence
+  process.p += process.PATCMGJetCHSSequence
   if runOnMC:
     process.demo.buffers.remove('edmTriggerResultsHelper2')
   if not runOnMC:
@@ -388,3 +415,17 @@ print 'Fastjet instances (dominating our processing time...):'
 from CMGTools.Common.Tools.visitorUtils import SeqVisitor
 v = SeqVisitor('FastjetJetProducer')
 process.p.visit(v)
+
+if writePatTuple:
+  process.out = cms.OutputModule("PoolOutputModule",
+                               fileName = cms.untracked.string('/tmp/hinzmann/patTuple.root'),
+                               # save only events passing the full path
+                               SelectEvents   = cms.untracked.PSet( SelectEvents = cms.vstring('p') ),
+                               # save PAT Layer 1 output; you need a '*' to
+                               # unpack the list of commands 'patEventContent'
+                               outputCommands = cms.untracked.vstring('keep *')
+                               )
+  process.outpath = cms.EndPath(process.out)
+  process.schedule.append(process.outpath)
+
+process.demo.ntupleName=cms.untracked.string("/tmp/hinzmann/ntuple_rerunPF.root")
