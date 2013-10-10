@@ -157,3 +157,8 @@ substructure_pas data/fileList_BulkG_WW_jjjj_c0p2_M2000-JHU.txt substructure_pas
 sleep 2
 substructure_pas data/fileList_BulkG_WW_jjjj_c0p2_M2500-JHU.txt substructure_pas_WWBulk2500.root > substructure_pas_WWBulk2500.log &
 sleep 2
+
+substructure_pas data/fileList_X_WW_lvjj_PS2000m-narrow-JHU.txt substructure_pas_WWPS2000.root > substructure_pas_WWPS2000.log &
+sleep 2
+substructure_pas data/fileList_X_WW_lvjj_SM2000m-narrow-JHU.txt substructure_pas_WWSM2000.root > substructure_pas_WWSM2000.log &
+sleep 2

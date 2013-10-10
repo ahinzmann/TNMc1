@@ -53,6 +53,7 @@ int main(int argc, char** argv)
   stream.select("edmEventHelper_info.luminosityBlock", eventhelper_luminosityBlock);
   stream.select("edmEventHelper_info.orbitNumber", eventhelper_orbitNumber);
   stream.select("edmEventHelper_info.run", eventhelper_run);
+  stream.select("edmEventHelperExtra_info.numberOfPrimaryVertices", eventhelperextra_numberOfPrimaryVertices);
   stream.select("GenEventInfoProduct_generator.weight", geneventinfoproduct_weight);
   stream.select("cmgBaseMET_cmgPFMET.et", met2_et);
   stream.select("cmgBaseMET_cmgPFMET.sumEt", met2_sumEt);
@@ -164,6 +165,8 @@ int main(int argc, char** argv)
   stream.select("cmgPFJet_cmgPFJetSelCHS.component_7_fraction", jethelper3_component_7_fraction);
   stream.select("cmgPFJet_cmgPFJetSelCHS.component_7_number", jethelper3_component_7_number);
 
+  stream.select("sdouble_vertexWeightSummer12MC53X2012ABCDData.value", vertexWeight);
+
   // The root application is needed to make canvases visible during
   // program execution. If this is not needed, just comment out the following
   // line
@@ -222,6 +225,42 @@ int main(int argc, char** argv)
       name << "dijet_" << massBins[j] << "_" << massBins[j+1] << "_" << "chi";
       hists.push_back(new TH1F(name.str().c_str(),name.str().c_str(),15,1,16));
       hists[j]->Sumw2();
+  }
+  
+  std::vector<TH1F*> histsnopu;
+  for ( size_t j = 0; j < (massBins.size()-1); ++j )
+  {
+      std::stringstream name;
+      name << "dijet_" << massBins[j] << "_" << massBins[j+1] << "_" << "nopu";
+      histsnopu.push_back(new TH1F(name.str().c_str(),name.str().c_str(),15,1,16));
+      histsnopu[j]->Sumw2();
+  }
+  
+  std::vector<TH1F*> histspu0;
+  for ( size_t j = 0; j < (massBins.size()-1); ++j )
+  {
+      std::stringstream name;
+      name << "dijet_" << massBins[j] << "_" << massBins[j+1] << "_" << "pu0";
+      histspu0.push_back(new TH1F(name.str().c_str(),name.str().c_str(),15,1,16));
+      histspu0[j]->Sumw2();
+  }
+  
+  std::vector<TH1F*> histspu10;
+  for ( size_t j = 0; j < (massBins.size()-1); ++j )
+  {
+      std::stringstream name;
+      name << "dijet_" << massBins[j] << "_" << massBins[j+1] << "_" << "pu10";
+      histspu10.push_back(new TH1F(name.str().c_str(),name.str().c_str(),15,1,16));
+      histspu10[j]->Sumw2();
+  }
+  
+  std::vector<TH1F*> histspu20;
+  for ( size_t j = 0; j < (massBins.size()-1); ++j )
+  {
+      std::stringstream name;
+      name << "dijet_" << massBins[j] << "_" << massBins[j+1] << "_" << "pu20";
+      histspu20.push_back(new TH1F(name.str().c_str(),name.str().c_str(),15,1,16));
+      histspu20[j]->Sumw2();
   }
   
   std::vector<TH1F*> histspt1;
@@ -285,6 +324,15 @@ int main(int argc, char** argv)
       name << "dijet_" << massBins[j] << "_" << massBins[j+1] << "_" << "mptsumpt";
       histsmptsumpt.push_back(new TH1F(name.str().c_str(),name.str().c_str(),50,0,1.00001));
       histsmptsumpt[j]->Sumw2();
+  }
+  
+  std::vector<TH1F*> histsdpt;
+  for ( size_t j = 0; j < (massBins.size()-1); ++j )
+  {
+      std::stringstream name;
+      name << "dijet_" << massBins[j] << "_" << massBins[j+1] << "_" << "dpt";
+      histsdpt.push_back(new TH1F(name.str().c_str(),name.str().c_str(),50,0,1));
+      histsdpt[j]->Sumw2();
   }
   
   std::vector<TH1F*> histsdphi;
@@ -465,6 +513,10 @@ for (int isrc = 0; isrc < nsrc; isrc++) {
           double weight=1;
           if(geneventinfoproduct_weight>0)
 	      weight=geneventinfoproduct_weight;
+          if(vertexWeight==0)
+	      vertexWeight=1;
+	  else
+	      weight*=vertexWeight;
 
           h1->Fill(DijetMass, weight);
 	  
@@ -577,6 +629,13 @@ for (int isrc = 0; isrc < nsrc; isrc++) {
 	         (DijetMass<massBins[j+1]))
               {
                   hists[j]->Fill(exp(fabs(jethelper3_rapidity[0]-jethelper3_rapidity[1])), weight);
+                  histsnopu[j]->Fill(exp(fabs(jethelper3_rapidity[0]-jethelper3_rapidity[1])), weight/vertexWeight);
+		  if((eventhelperextra_numberOfPrimaryVertices>=0)&&(eventhelperextra_numberOfPrimaryVertices<10))
+                    histspu0[j]->Fill(exp(fabs(jethelper3_rapidity[0]-jethelper3_rapidity[1])), weight);
+		  if((eventhelperextra_numberOfPrimaryVertices>=10)&&(eventhelperextra_numberOfPrimaryVertices<20))
+                    histspu10[j]->Fill(exp(fabs(jethelper3_rapidity[0]-jethelper3_rapidity[1])), weight);
+		  if((eventhelperextra_numberOfPrimaryVertices>=20))
+                    histspu20[j]->Fill(exp(fabs(jethelper3_rapidity[0]-jethelper3_rapidity[1])), weight);
                   histspt1[j]->Fill(jethelper3_pt[0], weight);
                   histspt2[j]->Fill(jethelper3_pt[1], weight);
                   histsy1[j]->Fill(jethelper3_rapidity[0], weight);
@@ -588,6 +647,7 @@ for (int isrc = 0; isrc < nsrc; isrc++) {
 		  TLorentzVector spt2;
 		  spt2.SetPtEtaPhiE(jethelper3_pt[1],jethelper3_eta[1],jethelper3_phi[1],jethelper3_energy[1]);
                   histsmptsumpt[j]->Fill((spt1+spt2).Pt()/(jethelper3_pt[0]+jethelper3_pt[1]), weight);
+                  histsdpt[j]->Fill((jethelper3_pt[0]-jethelper3_pt[1])/(jethelper3_pt[0]+jethelper3_pt[1]));
                   histsdphi[j]->Fill(fabs(reco::deltaPhi(jethelper3_phi[0],jethelper3_phi[1])));
               }
 for (int isrc = 0; isrc < nsrc; isrc++) {
@@ -642,6 +702,10 @@ for (int isrc = 0; isrc < nsrc; isrc++) {
   for ( size_t j = 0; j < (massBins.size()-1); ++j )
   {
       hists[j]->Write();
+      histsnopu[j]->Write();
+      histspu0[j]->Write();
+      histspu10[j]->Write();
+      histspu20[j]->Write();
       histspt1[j]->Write();
       histspt2[j]->Write();
       histsy1[j]->Write();
@@ -649,6 +713,7 @@ for (int isrc = 0; isrc < nsrc; isrc++) {
       histsyboost[j]->Write();
       histsmetsumet[j]->Write();
       histsmptsumpt[j]->Write();
+      histsdpt[j]->Write();
       histsdphi[j]->Write();
       hists[j]->Draw("histe");
 for (int isrc = 0; isrc < nsrc; isrc++) {

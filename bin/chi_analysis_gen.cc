@@ -287,6 +287,15 @@ int main(int argc, char** argv)
       histsmptsumpt[j]->Sumw2();
   }
   
+  std::vector<TH1F*> histsdpt;
+  for ( size_t j = 0; j < (massBins.size()-1); ++j )
+  {
+      std::stringstream name;
+      name << "dijet_" << massBins[j] << "_" << massBins[j+1] << "_" << "dpt";
+      histsdpt.push_back(new TH1F(name.str().c_str(),name.str().c_str(),50,0,1));
+      histsdpt[j]->Sumw2();
+  }
+  
   std::vector<TH1F*> histsdphi;
   for ( size_t j = 0; j < (massBins.size()-1); ++j )
   {
@@ -589,6 +598,7 @@ for (int isrc = 0; isrc < nsrc; isrc++) {
 		  TLorentzVector spt2;
 		  spt2.SetPtEtaPhiE(jethelper3_pt[1],jethelper3_eta[1],jethelper3_phi[1],jethelper3_energy[1]);
                   histsmptsumpt[j]->Fill((spt1+spt2).Pt()/(jethelper3_pt[0]+jethelper3_pt[1]), weight);
+                  histsdpt[j]->Fill((jethelper3_pt[0]-jethelper3_pt[1])/(jethelper3_pt[0]+jethelper3_pt[1]));
                   histsdphi[j]->Fill(fabs(reco::deltaPhi(jethelper3_phi[0],jethelper3_phi[1])));
               }
 for (int isrc = 0; isrc < nsrc; isrc++) {
@@ -650,6 +660,7 @@ for (int isrc = 0; isrc < nsrc; isrc++) {
       histsyboost[j]->Write();
       histsmetsumet[j]->Write();
       histsmptsumpt[j]->Write();
+      histsdpt[j]->Write();
       histsdphi[j]->Write();
       hists[j]->Draw("histe");
 for (int isrc = 0; isrc < nsrc; isrc++) {

@@ -26,7 +26,7 @@ gStyle.SetLegendBorderSize(0)
 if __name__ == '__main__':
 
  theory=False
- runSet=1
+ runSet=6
 
  names = ["npv",
 	   "pt",
@@ -36,6 +36,10 @@ if __name__ == '__main__':
            ("Jet1pt","vertexWeight*((abs(Jet1eta)<2.4)&&(deta<1.3)&&(DijetMass>890)&&(Jet1pt>400))","jet p_{T} (GeV)"),
            ("Jet1eta","vertexWeight*((abs(Jet1eta)<2.4)&&(deta<1.3)&&(DijetMass>890&&(Jet1pt>400)))","jet #eta"),
            ]
+
+ jetmasscut="&&(Jet1Mass>60)&&(Jet1Mass<100)"
+
+ massbins=[400,600,800,1000,1250,1500]
 
  if runSet==1:
   samples = ["substructure_pas_WWBulk1000.root",
@@ -87,6 +91,41 @@ if __name__ == '__main__':
   styles=[1,2,1,2]
   widths=[2,2,2,2]
 
+ if runSet==5:
+  samples = ["substructure_pas_WWPS2000.root",
+             ]
+  names = ["pt",
+	   ]
+  plots = [("Jet1pt","vertexWeight*((abs(Jet1eta)<2.4)&&(deta<1.3)&&(DijetMass>890)&&(Jet1pt>400))","jet p_{T} (GeV)"),
+           ]
+  jetmasscut="&&(Jet1Mass>70)&&(Jet1Mass<100)"
+  massbins=[900,1100]
+  #colors=[1,1,2,2,1,1,2,2,1,1,2,2,]
+  #styles=[2,1,2,1,2,1,2,1,2,1,2,1,]
+  #widths=[2,1,2,1,2,1,2,1,2,1,2,1,]
+  colors=[2,1,2,1,2,1,]
+  styles=[2,1,2,1,2,1,]
+  widths=[2,1,2,1,2,1,]
+
+ if runSet==6:
+  samples = [#"substructure_pas_WWPy62000.root",
+             #"substructure_pas_WWHpp2000.root",
+             #"substructure_pas_WWBulk2000.root",
+             "substructure_pas_WWSM2000.root",
+             ]
+  names = ["pt",
+	   ]
+  plots = [("Jet1pt","vertexWeight*((abs(Jet1eta)<2.4)&&(deta<1.3)&&(DijetMass>890)&&(Jet1pt>400))","jet p_{T} (GeV)"),
+           ]
+  jetmasscut="&&(Jet1Mass>70)&&(Jet1Mass<100)"
+  massbins=[900,1100]
+  #colors=[1,1,2,2,1,1,2,2,1,1,2,2,]
+  #styles=[2,1,2,1,2,1,2,1,2,1,2,1,]
+  #widths=[2,1,2,1,2,1,2,1,2,1,2,1,]
+  colors=[2,1,2,1,2,1,]
+  styles=[2,1,2,1,2,1,]
+  widths=[2,1,2,1,2,1,]
+
  results=[]
  for plot in plots:
   if runSet==2:
@@ -107,7 +146,7 @@ if __name__ == '__main__':
   else:
     canvas = TCanvas("","",0,0,200,200)
     canvas.SetLogy(False)
-  if runSet>1:
+  if runSet!=1 and runSet<5:
       legend=TLegend(0.4,0.6,0.85,0.9)
   else:
       legend=TLegend(0.17,0.2,0.85,0.35)
@@ -129,26 +168,26 @@ if __name__ == '__main__':
     f=TFile.Open(sample)
     tree=f.Get("dijetWtag")
 
-    signal = "Hpp" in sample or "Bulk" in sample
+    signal = "Hpp" in sample or "Py6" in sample or "Bulk" in sample or "SM" in sample or "PS" in sample
     histname="plot"+names[plots.index(plot)]+"_"+str(nominator)+str(s)
-    if plot[2]=="number of vertices" and runSet>1:
+    if plot[2]=="number of vertices" and (runSet!=1 and runSet<5):
        hist=TH1F(histname,histname,15,5,35);
        hist.GetYaxis().SetRangeUser(0,50000)
-    if plot[2]=="number of vertices" and runSet==1:
+    if plot[2]=="number of vertices" and (runSet==1 or runSet>=5):
        hist=TH1F(histname,histname,6,0,30);
        hist.GetYaxis().SetRangeUser(0,50000)
-    if plot[2]=="jet #eta" and runSet>1:
+    if plot[2]=="jet #eta" and (runSet!=1 and runSet<5):
        hist=TH1F(histname,histname,20,-2.4,2.4);
        hist.GetYaxis().SetRangeUser(0,50000)
-    if plot[2]=="jet #eta" and runSet==1:
+    if plot[2]=="jet #eta" and (runSet==1 or runSet>=5):
        hist=TH1F(histname,histname,10,-2.4,2.4);
        hist.GetYaxis().SetRangeUser(0,50000)
-    if "jet p_{T}" in plot[2] and runSet>1:
+    if "jet p_{T}" in plot[2] and (runSet!=1 and runSet<5):
        hist=TH1F(histname,histname,11,400,1500);
        hist.GetYaxis().SetRangeUser(0,50000)
-    if "jet p_{T}" in plot[2] and runSet==1:
+    if "jet p_{T}" in plot[2] and (runSet==1 or runSet>=5):
        binning=array.array('d')
-       for bin in [400,600,800,1000,1250,1500]:
+       for bin in massbins:
           binning.append(bin)
        hist=TH1F(histname,histname,len(binning)-1,binning);
        hist.GetYaxis().SetRangeUser(0,50000)
@@ -157,9 +196,9 @@ if __name__ == '__main__':
     if not "jet p_{T}" in plot[2]:
         cutstring+="&&(Jet1pt<600)"
     if nominator==1:
-        cutstring+="&&(Jet1Mass>60)&&(Jet1Mass<100)"
+        cutstring+=jetmasscut
     if nominator==2:
-        cutstring+="&&(Jet1Mass>60)&&(Jet1Mass<100)&&(Jet1Nsub<0.5)"
+        cutstring+=jetmasscut+"&&(Jet1Nsub<0.5)"
     if (runSet==3 and s==1) or (runSet==4 and s<=2):
         cutstring+="&&(Jet1quarkgluon==2)"
     if (runSet==3 and s==2) or (runSet==4 and s>=3):
@@ -179,9 +218,9 @@ if __name__ == '__main__':
       hist.GetXaxis().SetLabelColor(0)
     else:
       hist.GetXaxis().SetTitle(plot[2])
-    if runSet==1:
+    if (runSet==1 or runSet>=5):
         hist.GetYaxis().SetTitle("Efficiency")
-    if runSet>1:
+    if (runSet!=1 and runSet<5):
         hist.GetYaxis().SetTitle("Fake rate")
 
     print "mean",hist.GetMean()
@@ -217,7 +256,7 @@ if __name__ == '__main__':
     if "QCDPythia8" in sample and not "1800" in sample:
         continue
 
-    if "WW" in sample and not "1000" in sample:
+    if runSet==1 and ("WWBulk" in sample and not "1000" in sample):
         samplenames=["1000","1500","2000","2500"]
 	samplenumber=0
         for samplename in samplenames:
@@ -230,7 +269,7 @@ if __name__ == '__main__':
 	        his.Add(hist,weight)
  	        hist=his
 		break
-    if "WW" in sample and not "2500" in sample:
+    if runSet==1 and ("WWBulk" in sample and not "2500" in sample):
         continue
 
     hist.SetLineColor(colors[counter])
@@ -285,6 +324,8 @@ if __name__ == '__main__':
       if firsthist:
           firsthist.GetYaxis().SetTitleOffset(1.2)
 
+    print "first bin",hist.GetBinContent(1)
+
     if counter==0:
       firsthist=hist
       if "Run" in sample:
@@ -300,7 +341,7 @@ if __name__ == '__main__':
     if hist.GetMaximum()>maximum and hist.GetMaximum()<hist.Integral():
         maximum=hist.GetMaximum()
 
-    if runSet>1:
+    if (runSet!=1 and runSet<5):
         firsthist.GetYaxis().SetRangeUser(0,0.3)
     else:
         firsthist.GetYaxis().SetRangeUser(0,1)
@@ -337,7 +378,7 @@ if __name__ == '__main__':
   legend.SetFillStyle(0)
   legend.Draw("same")
 
-  if runSet>1:
+  if (runSet!=1 and runSet<5):
     legend4=TLegend(0.23,0.85,0.5,0.9,"CA R=0.8")
   else:
       legend4=TLegend(0.43,0.45,0.5,0.5,"CA R=0.8")
@@ -346,7 +387,7 @@ if __name__ == '__main__':
   legend4.Draw("same")
 
   if not "jet p_{T}" in plot[2]:
-    if runSet>1:
+    if (runSet!=1 and runSet<5):
       legend2=TLegend(0.17,0.8,0.5,0.85,"400 < p_{T} < 600 GeV")
     else:
        legend2=TLegend(0.37,0.4,0.5,0.45,"400 < p_{T} < 600 GeV")
@@ -354,7 +395,7 @@ if __name__ == '__main__':
     legend2.SetFillStyle(0)
     legend2.Draw("same")
 
-  if runSet>1:
+  if (runSet!=1 and runSet<5):
     legend2a=TLegend(0.24,0.75,0.5,0.8,"|#eta|<2.4")
   else:
      legend2a=TLegend(0.44,0.35,0.5,0.4,"|#eta|<2.4")
