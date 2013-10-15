@@ -31,6 +31,7 @@ runQJets = False
 runOnVVtuples = False
 runOnCMGp = False
 writePatTuple = True
+runTrimmedCA8jets = True
 
 if not runOnMC:
    runAK5genjets=False
@@ -220,6 +221,9 @@ if not runPATCMG:
     process.patJetsCA8CHSprunedSubjets.addBTagInfo=False
     process.patJetsCA8CHSprunedSubjets.addDiscriminators=False
     process.PATCMGJetSequenceCA8CHSpruned.remove(process.btaggingCA8CHSprunedSubjets)
+    process.patJetsCA8CHStrimmed.addBTagInfo=False
+    process.patJetsCA8CHStrimmed.addDiscriminators=False
+    process.PATCMGJetSequenceCA8CHStrimmed.remove(process.btaggingCA8CHStrimmed)
 if not runOnMC:
     process.PATCMGJetSequenceCA8CHS.remove( process.jetMCSequenceCA8CHS )
     process.patJetsCA8CHS.addGenJetMatch = False
@@ -229,6 +233,10 @@ if not runOnMC:
     process.patJetsCA8CHSpruned.addGenJetMatch = False
     process.patJetsCA8CHSpruned.addGenPartonMatch = False
     process.patJetCorrFactorsCA8CHSpruned.levels.append('L2L3Residual')
+    process.PATCMGJetSequenceCA8CHStrimmed.remove( process.jetMCSequenceCA8CHStrimmed )
+    process.patJetsCA8CHStrimmed.addGenJetMatch = False
+    process.patJetsCA8CHStrimmed.addGenPartonMatch = False
+    process.patJetCorrFactorsCA8CHStrimmed.levels.append('L2L3Residual')
 
 #### Adding Nsubjetiness
 
@@ -278,6 +286,7 @@ else:
 if runNoCHS:
     process.ca8PFJetsCHS.src = cms.InputTag("particleFlow")
     process.ca8PFJetsCHSpruned.src = cms.InputTag("particleFlow")
+    process.ca8PFJetsCHStrimmed.src = cms.InputTag("particleFlow")
 
 ###RUN CALO jets
 
@@ -292,6 +301,11 @@ if runCaloJets:
     process.ca8PFJetsCHSpruned.jetType = cms.string("CaloJet")
     process.ca8PFJetsCHSpruned.inputEtMin = cms.double(0.3)
     process.ca8PFJetsCHSpruned.doPVCorrection = cms.bool(True)
+    process.ca8PFJetsCHStrimmed.src = cms.InputTag("towerMaker")
+    process.ca8PFJetsCHStrimmed.srcPVs = cms.InputTag("offlinePrimaryVertices")
+    process.ca8PFJetsCHStrimmed.jetType = cms.string("CaloJet")
+    process.ca8PFJetsCHStrimmed.inputEtMin = cms.double(0.3)
+    process.ca8PFJetsCHStrimmed.doPVCorrection = cms.bool(True)
 
 ##### Razor stuff
 
@@ -371,6 +385,8 @@ if runPrunedAK7jets:
     process.tnmc1 += process.PATCMGJetSequenceAK7CHSpruned
 if runCA8jets:
     process.tnmc1 += process.PATCMGJetSequenceCA8CHS+process.PATCMGJetSequenceCA8CHSpruned+process.selectedPatJetsCA8CHSwithNsub+process.selectedPatJetsCA8CHSwithQjets
+if runTrimmedCA8jets:
+    process.tnmc1 += process.PATCMGJetSequenceCA8CHStrimmed
 if runAK5genjets:
     process.tnmc1 += process.genParticlesForJets+process.ak5GenJets
 process.tnmc1 += process.demo

@@ -26,7 +26,7 @@ TGaxis.SetMaxDigits(3)
 if __name__ == '__main__':
 
  theory=False
- runSet=14
+ runSet=12
 
  names = ["npu",
            "npv",

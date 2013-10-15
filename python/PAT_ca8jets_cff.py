@@ -269,6 +269,125 @@ PATCMGJetSequenceCA8CHSpruned = cms.Sequence(
     selectedPatJetsCA8CHSpruned
     )
 
+
+# JETS TRIMMED CA8 ----------------------------
+
+from RecoJets.JetProducers.ak5PFJetsTrimmed_cfi import ak5PFJetsTrimmed
+ca8PFJetsCHStrimmed = ak5PFJetsTrimmed.clone(
+    src = 'pfNoPileUp',
+    jetPtMin = cms.double(30.0),
+    doAreaFastjet = cms.bool(True),
+    rParam = cms.double(0.8),
+    jetAlgorithm = cms.string("CambridgeAachen"),
+    rFilt = cms.double(0.1),
+    trimPtFracMin = cms.double(0.03)
+    )
+
+jetSource = 'ca8PFJetsCHStrimmed'
+
+# corrections 
+from PhysicsTools.PatAlgos.recoLayer0.jetCorrFactors_cfi import *
+patJetCorrFactorsCA8CHStrimmed = patJetCorrFactors.clone()
+patJetCorrFactorsCA8CHStrimmed.src = jetSource
+# will need to add L2L3 corrections in the cfg
+patJetCorrFactorsCA8CHStrimmed.levels = ['L1FastJet', 'L2Relative', 'L3Absolute']
+patJetCorrFactorsCA8CHStrimmed.payload = 'AK7PFchs'
+patJetCorrFactorsCA8CHStrimmed.useRho = True
+
+# parton and gen jet matching
+
+from PhysicsTools.PatAlgos.mcMatchLayer0.jetMatch_cfi import *
+patJetPartonMatchCA8CHStrimmed = patJetPartonMatch.clone()
+patJetPartonMatchCA8CHStrimmed.src = jetSource
+patJetGenJetMatchCA8CHStrimmed = patJetGenJetMatch.clone()
+patJetGenJetMatchCA8CHStrimmed.src = jetSource
+patJetGenJetMatchCA8CHStrimmed.matched = 'ca8GenJetsNoNu'
+
+from PhysicsTools.PatAlgos.mcMatchLayer0.jetFlavourId_cff import *
+patJetPartonAssociationCA8CHStrimmed = patJetPartonAssociation.clone()
+patJetPartonAssociationCA8CHStrimmed.jets = jetSource
+
+# pat jets
+
+from RecoJets.JetAssociationProducers.ak5JTA_cff import *
+ca8CHStrimmedJetTracksAssociatorAtVertex=ak5JetTracksAssociatorAtVertex.clone()
+ca8CHStrimmedJetTracksAssociatorAtVertex.jets=jetSource
+from RecoBTag.Configuration.RecoBTag_cff import * # btagging sequence
+impactParameterTagInfosCA8CHStrimmed=impactParameterTagInfos.clone()
+impactParameterTagInfosCA8CHStrimmed.jetTracks='ca8CHStrimmedJetTracksAssociatorAtVertex'
+secondaryVertexTagInfosCA8CHStrimmed=secondaryVertexTagInfos.clone()
+secondaryVertexTagInfosCA8CHStrimmed.trackIPTagInfos='impactParameterTagInfosCA8CHStrimmed'
+combinedSecondaryVertexBJetTagsCA8CHStrimmed=combinedSecondaryVertexBJetTags.clone()
+combinedSecondaryVertexBJetTagsCA8CHStrimmed.tagInfos = cms.VInputTag(cms.InputTag("impactParameterTagInfosCA8CHStrimmed"),
+    cms.InputTag("secondaryVertexTagInfosCA8CHStrimmed"))
+btaggingCA8CHStrimmed=cms.Sequence(ca8CHStrimmedJetTracksAssociatorAtVertex+impactParameterTagInfosCA8CHStrimmed+secondaryVertexTagInfosCA8CHStrimmed+combinedSecondaryVertexBJetTagsCA8CHStrimmed)
+
+patJetsCA8CHStrimmed = patJets.clone()
+patJetsCA8CHStrimmed.jetSource = jetSource
+patJetsCA8CHStrimmed.addJetCharge = False
+patJetsCA8CHStrimmed.embedCaloTowers = False
+patJetsCA8CHStrimmed.embedPFCandidates = False
+patJetsCA8CHStrimmed.addAssociatedTracks = False
+patJetsCA8CHStrimmed.addBTagInfo = True
+patJetsCA8CHStrimmed.addDiscriminators = True
+patJetsCA8CHStrimmed.addJetID = False
+patJetsCA8CHStrimmed.tagInfoSources = cms.VInputTag(cms.InputTag("secondaryVertexTagInfosCA8CHStrimmed"))
+patJetsCA8CHStrimmed.trackAssociationSource = cms.InputTag("ca8CHStrimmedJetTracksAssociatorAtVertex")
+patJetsCA8CHStrimmed.discriminatorSources = cms.VInputTag(cms.InputTag("combinedSecondaryVertexBJetTagsCA8CHStrimmed"))
+patJetsCA8CHStrimmed.getJetMCFlavour = False
+patJetsCA8CHStrimmed.jetCorrFactorsSource = cms.VInputTag(cms.InputTag('patJetCorrFactorsCA8CHStrimmed'))
+patJetsCA8CHStrimmed.genPartonMatch = cms.InputTag('patJetPartonMatchCA8CHStrimmed')
+patJetsCA8CHStrimmed.genJetMatch = cms.InputTag('patJetGenJetMatchCA8CHStrimmed')
+
+selectedPatJetsCA8CHStrimmed = selectedPatJets.clone()
+selectedPatJetsCA8CHStrimmed.src = 'patJetsCA8CHStrimmed'
+selectedPatJetsCA8CHStrimmed.cut = 'pt()>30'
+
+ca8TrimmedGenJetsNoNu = ak7GenJetsNoNu.clone()
+ca8TrimmedGenJetsNoNu.rParam = 0.8
+ca8TrimmedGenJetsNoNu.jetAlgorithm = "CambridgeAachen"
+ca8TrimmedGenJetsNoNu.doAreaFastjet = True
+ca8TrimmedGenJetsNoNu.useTrimming = cms.bool(True)
+ca8TrimmedGenJetsNoNu.useExplicitGhosts = cms.bool(True)
+ca8TrimmedGenJetsNoNu.writeCompound = cms.bool(True)
+ca8TrimmedGenJetsNoNu.rFilt = cms.double(0.1)
+ca8TrimmedGenJetsNoNu.trimPtFracMin = cms.double(0.03)
+ca8TrimmedGenJetsNoNu.jetPtMin = 30
+
+patGenJetsCA8CHStrimmed = patJets.clone()
+patGenJetsCA8CHStrimmed.jetSource = 'ca8TrimmedGenJetsNoNu'
+patGenJetsCA8CHStrimmed.addGenJetMatch = False
+patGenJetsCA8CHStrimmed.addGenPartonMatch = False
+patGenJetsCA8CHStrimmed.addJetCharge = False
+patGenJetsCA8CHStrimmed.embedCaloTowers = False
+patGenJetsCA8CHStrimmed.embedPFCandidates = False
+patGenJetsCA8CHStrimmed.addAssociatedTracks = False
+patGenJetsCA8CHStrimmed.addBTagInfo = False
+patGenJetsCA8CHStrimmed.addDiscriminators = False
+patGenJetsCA8CHStrimmed.addJetID = False
+patGenJetsCA8CHStrimmed.getJetMCFlavour = False
+patGenJetsCA8CHStrimmed.addJetCorrFactors = False
+
+jetMCSequenceCA8CHStrimmed = cms.Sequence(
+    patJetPartonMatchCA8CHStrimmed +
+    genParticlesForJetsNoNu +
+    ca8TrimmedGenJetsNoNu +
+    patGenJetsCA8CHStrimmed +
+    patJetGenJetMatchCA8CHStrimmed
+    )
+
+PATCMGJetSequenceCA8CHStrimmed = cms.Sequence(
+    ca8PFJetsCHStrimmed +
+    jetMCSequenceCA8CHStrimmed +
+    patJetCorrFactorsCA8CHStrimmed +
+    btaggingCA8CHStrimmed +
+    patJetsCA8CHStrimmed +
+    selectedPatJetsCA8CHStrimmed
+    )
+
+
+
+
 #### Adding Nsubjetiness
 
 selectedPatJetsCA8CHSwithNsub = cms.EDProducer("NjettinessAdder",
