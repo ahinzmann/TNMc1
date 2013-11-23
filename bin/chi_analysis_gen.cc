@@ -326,20 +326,26 @@ int main(int argc, char** argv)
   HcalLaserEventFilter2012 laserfilter(parameters);
 */
 // Instantiate uncertainty sources
-int nsrc = 22; /////////////////////////////
-const char* srcnames[22] =
+int nsrc = 25; /////////////////////////////
+const char* srcnames[25] =
   {"Absolute", "HighPtExtra", /*"SinglePion",*/ "SinglePionECAL"/*new*/, "SinglePionHCAL"/*new*/,
    "FlavorQCD", "Time",
    "RelativeJEREC1", "RelativeJEREC2", "RelativeJERHF",
    "RelativePtBB"/*new*/, "RelativePtEC1"/*new*/, "RelativePtEC2"/*new*/, "RelativePtHF"/*new*/,
    "RelativeStatEC2", "RelativeStatHF", "RelativeFSR", /*"RelativeSample",*/ /*new*/
    "PileUpDataMC", /*"PileUpOOT",*/ "PileUpBias", /*"PileUpJetRate"*/
-   /*"PileUpPt",*/ "PileUpPtBB"/*new*/, "PileUpPtEC"/*new*/, "PileUpPtHF"/*new*/, "Total"};
+   /*"PileUpPt",*/ "PileUpPtBB"/*new*/, "PileUpPtEC"/*new*/, "PileUpPtHF"/*new*/, "Total",
+   // self made-up eta dependent uncertainties
+   "RelativePtBB0_10"/*new*/, "RelativePtBB10_15"/*new*/, "RelativePtBB15_25"/*new*/
+   };
 std::vector<JetCorrectionUncertainty*> vsrc(nsrc);
 
 for (int isrc = 0; isrc < nsrc; isrc++) {
 
    const char *name = srcnames[isrc];
+   if(isrc==22) name="RelativePtBB"; // self made-up eta dependent uncertainties
+   if(isrc==23) name="RelativePtEC1"; // self made-up eta dependent uncertainties
+   if(isrc==24) name="RelativePtEC1"; // self made-up eta dependent uncertainties
    JetCorrectorParameters *p = new JetCorrectorParameters("data/Summer13_V4_DATA_UncertaintySources_AK5PFchs.txt", name);
    JetCorrectionUncertainty *unc = new JetCorrectionUncertainty(*p);
    vsrc[isrc] = unc;
@@ -605,12 +611,22 @@ for (int isrc = 0; isrc < nsrc; isrc++) {
               double shift;
 	      vsrc[isrc]->setJetPt(jethelper3_pt[0]);
               vsrc[isrc]->setJetEta(jethelper3_eta[0]);
-	      shift=1.0+vsrc[isrc]->getUncertainty(true);
+	      if((isrc<22)||
+	         ((isrc==22)&&(abs(jethelper3_eta[0])<1.0))||
+		 ((isrc==23)&&(abs(jethelper3_eta[0])>1.0)&&(abs(jethelper3_eta[0])<1.5))||
+	         ((isrc==24)&&(abs(jethelper3_eta[0])>1.5)))
+	        shift=1.0+vsrc[isrc]->getUncertainty(true);
+	      else shift=1;
 	      TLorentzVector jet1UpAbsolute;
 	      jet1UpAbsolute.SetPtEtaPhiE(jethelper3_pt[0]*shift,jethelper3_eta[0],jethelper3_phi[0],jethelper3_energy[0]*shift);
               vsrc[isrc]->setJetPt(jethelper3_pt[1]);
               vsrc[isrc]->setJetEta(jethelper3_eta[1]);
-	      shift=1.0+vsrc[isrc]->getUncertainty(true);
+	      if((isrc<22)||
+	         ((isrc==22)&&(abs(jethelper3_eta[1])<1.0))||
+		 ((isrc==23)&&(abs(jethelper3_eta[1])>1.0)&&(abs(jethelper3_eta[1])<1.5))||
+	         ((isrc==24)&&(abs(jethelper3_eta[1])>1.5)))
+	        shift=1.0+vsrc[isrc]->getUncertainty(true);
+	      else shift=1;
 	      TLorentzVector jet2UpAbsolute;
 	      jet2UpAbsolute.SetPtEtaPhiE(jethelper3_pt[1]*shift,jethelper3_eta[1],jethelper3_phi[1],jethelper3_energy[1]*shift);
               if(((jet1UpAbsolute+jet2UpAbsolute).M()>=massBins[j])&&
@@ -621,12 +637,22 @@ for (int isrc = 0; isrc < nsrc; isrc++) {
               double shift;
 	      vsrc[isrc]->setJetPt(jethelper3_pt[0]);
               vsrc[isrc]->setJetEta(jethelper3_eta[0]);
-	      shift=1.0-vsrc[isrc]->getUncertainty(false);
+	      if((isrc<22)||
+	         ((isrc==22)&&(abs(jethelper3_eta[0])<1.0))||
+		 ((isrc==23)&&(abs(jethelper3_eta[0])>1.0)&&(abs(jethelper3_eta[0])<1.5))||
+	         ((isrc==24)&&(abs(jethelper3_eta[0])>1.5)))
+	        shift=1.0-vsrc[isrc]->getUncertainty(false);
+	      else shift=1;
 	      TLorentzVector jet1UpAbsolute;
 	      jet1UpAbsolute.SetPtEtaPhiE(jethelper3_pt[0]*shift,jethelper3_eta[0],jethelper3_phi[0],jethelper3_energy[0]*shift);
               vsrc[isrc]->setJetPt(jethelper3_pt[1]);
               vsrc[isrc]->setJetEta(jethelper3_eta[1]);
-	      shift=1.0-vsrc[isrc]->getUncertainty(false);
+	      if((isrc<22)||
+	         ((isrc==22)&&(abs(jethelper3_eta[1])<1.0))||
+		 ((isrc==23)&&(abs(jethelper3_eta[1])>1.0)&&(abs(jethelper3_eta[1])<1.5))||
+	         ((isrc==24)&&(abs(jethelper3_eta[1])>1.5)))
+	        shift=1.0-vsrc[isrc]->getUncertainty(false);
+	      else shift=1;
 	      TLorentzVector jet2UpAbsolute;
 	      jet2UpAbsolute.SetPtEtaPhiE(jethelper3_pt[1]*shift,jethelper3_eta[1],jethelper3_phi[1],jethelper3_energy[1]*shift);
               if(((jet1UpAbsolute+jet2UpAbsolute).M()>=massBins[j])&&

@@ -18,7 +18,7 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 runOnMC = True
 runPATCMG = True
-runPF = False
+runPF = True
 runNoCHS = False
 runCaloJets = False
 recalibrateCMGJets = False
@@ -64,6 +64,8 @@ process.source = datasetToSource(
     )
 
 process.source.fileNames=cms.untracked.vstring('file:///afs/cern.ch/user/h/hinzmann/workspace/RSGravitonToWW_kMpl01_M-2500_Tune23_8TeV-herwigpp-Summer12_DR53X-PU_S10_START53_V7A-v1-A25D0992-00C1-E211-8D70-E0CB4E29C4D8.root')
+if runPF:
+    process.source.fileNames=cms.untracked.vstring('file:///afs/cern.ch/user/h/hinzmann/workspace/RSGravitonToWW_kMpl01_M-2500_Tune23_8TeV-herwigpp-Summer12_DR53X-PU_S10_START53_V7A-v1-GENSIM-0454C808-0DBD-E211-886D-0025904886E6.root')
 
 if runOnVVtuples:
     #process.load("ExoDiBosonResonances/EDBRCommon/datasets/summer12_WJetsPt100_cff")
@@ -123,6 +125,14 @@ else:
 #    GT = 'GR_P_V39_AN3::All' # for Moriond data
     GT = 'FT_53_V21_AN4::All' # for Jan22ReReco data
 process.GlobalTag.globaltag = GT
+
+process.p = cms.Path()
+process.schedule = cms.Schedule(process.p)
+
+if runPF:
+     process.load("Configuration.StandardSequences.Reconstruction_cff")
+     process.p += process.reconstruction
+     #process.particleFlowClusterHCAL.nNeighbours=0
 
 #### AK5 CHS jets
 process.load('CMGTools.Common.PAT.PATCMG_cff')
@@ -346,19 +356,9 @@ process.load("CMGTools.RootTools.utils.vertexWeight.vertexWeights2012_cfi")
 
 print 'Global tag       : ', process.GlobalTag.globaltag
 
-process.p = cms.Path()
-process.schedule = cms.Schedule(process.p)
 if runPATCMG:
   process.load('CMGTools.Common.PAT.addFilterPaths_cff')
   process.p = cms.Path()
-  if runPF:
-     process.load("RecoParticleFlow.PFClusterProducer.particleFlowCluster_cff")
-     process.p += process.towerMakerPF
-     process.p += process.particleFlowCluster
-     process.load("RecoParticleFlow.PFProducer.particleFlowBlock_cff")
-     process.p += process.particleFlowBlock
-     process.load("RecoParticleFlow.PFProducer.particleFlow_cff")
-     process.p += process.particleFlowTmp
   process.p += process.PATCMGSequence
   process.p += process.PATCMGJetCHSSequence
   if runOnMC:
@@ -371,6 +371,11 @@ if runPATCMG:
       process.metNoiseCleaningPath.remove(process.hcalfilter)
       process.trackIsolationMakerFilterPath.remove(process.trackIsolationFilter)
   del process.boolToIntSequence
+
+if runPF:
+    process.p.remove(process.cmgL1TriggerObject)
+    process.p.remove(process.cmgL1TriggerObjectSel)
+    process.p.remove(process.cmgL1TriggerObjectCount)
 
 process.tnmc1 = cms.Sequence(process.goodOfflinePrimaryVertices)
 process.tnmc1 += process.razorMJObjectSequence

@@ -217,6 +217,34 @@ namespace pat
         float genTau21PUcorrected(double minPt=0, bool CHS=false) const;
         float genTau21PUcorrectedCHS() const { return genTau21PUcorrected(0,true); }
 
+        float getGenCaloJetMass(double calosize=0.1, bool PF=false, bool correctTracks=false) const;
+        float getGenCaloJetMass0005() const { return getGenCaloJetMass(0.005,false,false); }
+        float getGenCaloJetMass001() const { return getGenCaloJetMass(0.01,false,false); }
+        float getGenCaloJetMass002() const { return getGenCaloJetMass(0.02,false,false); }
+        float getGenCaloJetMass005() const { return getGenCaloJetMass(0.05,false,false); }
+        float getGenCaloJetMass01() const { return getGenCaloJetMass(0.1,false,false); }
+        float getGenCaloJetMass02() const { return getGenCaloJetMass(0.2,false,false); }
+        float getGenCaloJetMass05() const { return getGenCaloJetMass(0.5,false,false); }
+        float getGenCaloJetMassPF0005() const { return getGenCaloJetMass(0.005,true,false); }
+        float getGenCaloJetMassPF001() const { return getGenCaloJetMass(0.01,true,false); }
+        float getGenCaloJetMassPF002() const { return getGenCaloJetMass(0.02,true,false); }
+        float getGenCaloJetMassPF005() const { return getGenCaloJetMass(0.05,true,false); }
+        float getGenCaloJetMassPF01() const { return getGenCaloJetMass(0.1,true,false); }
+        float getGenCaloJetMassPF02() const { return getGenCaloJetMass(0.2,true,false); }
+        float getGenCaloJetMassPF05() const { return getGenCaloJetMass(0.5,true,false); }
+        float getGenCaloJetMassPFcorrect0005() const { return getGenCaloJetMass(0.005,true,true); }
+        float getGenCaloJetMassPFcorrect001() const { return getGenCaloJetMass(0.01,true,true); }
+        float getGenCaloJetMassPFcorrect002() const { return getGenCaloJetMass(0.02,true,true); }
+        float getGenCaloJetMassPFcorrect005() const { return getGenCaloJetMass(0.05,true,true); }
+        float getGenCaloJetMassPFcorrect01() const { return getGenCaloJetMass(0.1,true,true); }
+        float getGenCaloJetMassPFcorrect02() const { return getGenCaloJetMass(0.2,true,true); }
+        float getGenCaloJetMassPFcorrect05() const { return getGenCaloJetMass(0.5,true,true); }
+        float getGenTrackJetMass() const;
+        float getCorrectedPrunedJetMass() const;
+        float getPrunedJetMass() const;
+        float getTrackJetMass() const;
+
+
         int getNcharged(double relPt=0) const;
         int getNneutral(double relPt=0) const;
         int genNCHS() const;

@@ -7,6 +7,9 @@
 //-----------------------------------------------------------------------------
 #include "Ntuples/TNMc1/interface/patJetHelper.h"
 
+#include "DataFormats/ParticleFlowReco/interface/PFBlockFwd.h"
+#include "DataFormats/ParticleFlowReco/interface/PFBlock.h"
+
 #include <fastjet/PseudoJet.hh>
 #include "Njettiness.hh"
 #include "EnergyCorrelator.hh"
@@ -14,6 +17,7 @@
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequenceArea.hh"
 #include "fastjet/Selector.hh"
+#include "fastjet/tools/Pruner.hh"
 #include "fastjet/tools/JetMedianBackgroundEstimator.hh"
 #include "fastjet/tools/Subtractor.hh"
 #include "ShapeWithComponents.hh"
@@ -209,6 +213,166 @@ float JetHelper::getGenTau(int num, double minPt, bool CHS) const
     return routine.getTau(num, FJparticles); 
 }
 
+float JetHelper::getGenCaloJetMass(double calosize, bool PF, bool correctTracks) const
+{
+    vector<fastjet::PseudoJet> FJparticles;
+    map<int,unsigned> calomap;
+    map<int,vector<unsigned> > trackmap;
+    //std::cerr << "find calo cells and tracks" << std::endl;
+    for (unsigned j = 0; j < object->numberOfDaughters(); j++){
+       reco::GenParticle const *p = dynamic_cast <const reco::GenParticle *>(object->daughter(j));
+       if(p) {
+         int index=int(p->y()/calosize)+1000*int(p->phi()/calosize);
+         if((p->charge()==0)||(!PF))
+	 {
+	   if(calomap.count(index)>0)
+	   {
+	    FJparticles[calomap[index]]+=fastjet::PseudoJet( p->px(), p->py(), p->pz(), p->energy() );
+           } else {
+	    calomap[index]=FJparticles.size();
+	    FJparticles.push_back( fastjet::PseudoJet( p->px(), p->py(), p->pz(), p->energy() ) );
+	   }
+	 } else {
+          trackmap[index].push_back(FJparticles.size());
+          FJparticles.push_back( fastjet::PseudoJet( p->px(), p->py(), p->pz(), p->energy() ) );
+	 }
+       }
+    }
+    //std::cerr << "make towers" << std::endl;
+    for (map<int,unsigned>::iterator iter=calomap.begin(); iter!=calomap.end(); ++iter){
+        FJparticles[iter->second]= fastjet::PtYPhiM(FJparticles[iter->second].pt(),(int(FJparticles[iter->second].rapidity()/calosize)+0.5)*calosize,(int(FJparticles[iter->second].phi()/calosize)+0.5)*calosize,FJparticles[iter->second].m());
+    }
+    //std::cerr << "correct with tracks" << std::endl;
+    if ((PF)&&(correctTracks)) {
+    for (map<int,unsigned>::iterator iter=calomap.begin(); iter!=calomap.end(); ++iter){
+      double pTsum=0;
+      for (vector<unsigned>::iterator iter2=trackmap[iter->first].begin(); iter2!=trackmap[iter->first].end(); ++iter2)
+        pTsum+=FJparticles[*iter2].pt();
+      if(pTsum==0) continue;
+      double factor=FJparticles[iter->second].pt()/pTsum;
+      fastjet::PseudoJet corrected;
+      for (vector<unsigned>::iterator iter2=trackmap[iter->first].begin(); iter2!=trackmap[iter->first].end(); ++iter2){
+	  corrected+=fastjet::PseudoJet( FJparticles[*iter2].px()*factor, FJparticles[*iter2].py()*factor, FJparticles[*iter2].pz()*factor, FJparticles[*iter2].E()*factor );
+      }
+      FJparticles[iter->second]=corrected;
+    }
+    }
+    //std::cerr << "rerun clustering" << std::endl;
+    fastjet::JetDefinition jet_def(fastjet::cambridge_algorithm, 2.0);
+    fastjet::ClusterSequence clust_seq(FJparticles, jet_def);
+    vector<fastjet::PseudoJet> inclusive_jets = fastjet::sorted_by_pt(clust_seq.inclusive_jets(0));
+    fastjet::Pruner pruner(fastjet::cambridge_algorithm, 0.1, 0.5);
+    double mass=-1;
+    if(inclusive_jets.size()>0)
+         mass=pruner(inclusive_jets[0]).m();
+    //std::cerr << "done" << std::endl;
+    return mass;
+}
+
+float JetHelper::getGenTrackJetMass() const
+{
+    vector<fastjet::PseudoJet> FJparticles;
+    //std::cerr << "find tracks" << std::endl;
+    for (unsigned j = 0; j < object->numberOfDaughters(); j++){
+       reco::GenParticle const *p = dynamic_cast <const reco::GenParticle *>(object->daughter(j));
+       if(p) {
+         if((p->charge()!=0))
+          FJparticles.push_back( fastjet::PseudoJet( p->px(), p->py(), p->pz(), p->energy() ) );
+       }
+    }
+    //std::cerr << "rerun clustering for tracks" << std::endl;
+    fastjet::JetDefinition jet_def(fastjet::cambridge_algorithm, 2.0);
+    fastjet::ClusterSequence clust_seq(FJparticles, jet_def);
+    vector<fastjet::PseudoJet> inclusive_jets = fastjet::sorted_by_pt(clust_seq.inclusive_jets(0));
+    fastjet::Pruner pruner(fastjet::cambridge_algorithm, 0.1, 0.5);
+    double mass=-1;
+    if(inclusive_jets.size()>0)
+         mass=pruner(inclusive_jets[0]).m();
+    //std::cerr << "done" << std::endl;
+    return mass;
+}
+
+float JetHelper::getPrunedJetMass() const
+{
+    vector<fastjet::PseudoJet> FJparticles;
+    for (unsigned k =0; k < object->getPFConstituents().size(); k++)
+    {
+       const reco::PFCandidate *p = object->getPFConstituent(k).get();
+       if(!p) continue;
+       FJparticles.push_back( fastjet::PseudoJet( p->px(), p->py(), p->pz(), p->energy() ) );
+    }
+    fastjet::JetDefinition jet_def(fastjet::cambridge_algorithm, 2.0);
+    fastjet::ClusterSequence clust_seq(FJparticles, jet_def);
+    vector<fastjet::PseudoJet> inclusive_jets = fastjet::sorted_by_pt(clust_seq.inclusive_jets(0));
+    if(inclusive_jets.size()==0) return 0;
+    double jetCorrection=object->pt()/inclusive_jets[0].pt();
+    fastjet::Pruner pruner(fastjet::cambridge_algorithm, 0.1, 0.5);
+    return pruner(inclusive_jets[0]).m()*jetCorrection;
+}
+
+float JetHelper::getTrackJetMass() const
+{
+    vector<fastjet::PseudoJet> FJparticles;
+    for (unsigned k =0; k < object->getPFConstituents().size(); k++)
+    {
+       const reco::PFCandidate *p = object->getPFConstituent(k).get();
+       if(!p) continue;
+       if(p->charge()!=0) //charge particles
+         FJparticles.push_back( fastjet::PseudoJet( p->px(), p->py(), p->pz(), p->energy() ) );
+    }
+    fastjet::JetDefinition jet_def(fastjet::cambridge_algorithm, 2.0);
+    fastjet::ClusterSequence clust_seq(FJparticles, jet_def);
+    vector<fastjet::PseudoJet> inclusive_jets = fastjet::sorted_by_pt(clust_seq.inclusive_jets(0));
+    if(inclusive_jets.size()==0) return 0;
+    double jetCorrection=object->pt()/inclusive_jets[0].pt();
+    fastjet::Pruner pruner(fastjet::cambridge_algorithm, 0.1, 0.5);
+    return pruner(inclusive_jets[0]).m()*jetCorrection;
+}
+
+float JetHelper::getCorrectedPrunedJetMass() const
+{
+    vector<fastjet::PseudoJet> FJparticles;
+    map<unsigned,unsigned> neutralHadrons;
+    map<unsigned,vector<unsigned> > chargedPatricles;
+    for (unsigned k =0; k < object->getPFConstituents().size(); k++)
+    {
+       const reco::PFCandidate *p = object->getPFConstituent(k).get();
+       if(!p) continue;
+       FJparticles.push_back( fastjet::PseudoJet( p->px(), p->py(), p->pz(), p->energy() ) );
+       map<unsigned,unsigned> blocks;
+       for (unsigned j =0; j < p->elementsInBlocks().size(); j++)
+       {
+        unsigned block = p->elementsInBlocks()[j].first.key();
+        if(blocks.count(block)!=0) continue;
+        blocks[block]=k;
+         //std::cerr << k << "," << p->pdgId() << "," << j << "," << block << std::endl;
+         if(p->pdgId()==130) //neutral hadrons
+           neutralHadrons[block]=k;
+         if(p->charge()!=0) //charge particles
+           chargedPatricles[block].push_back(k);
+       }
+    }
+    for (map<unsigned,unsigned>::iterator iter=neutralHadrons.begin(); iter!=neutralHadrons.end(); ++iter){
+      double pTsum=0;
+      for (vector<unsigned>::iterator iter2=chargedPatricles[iter->first].begin(); iter2!=chargedPatricles[iter->first].end(); ++iter2)
+        pTsum+=FJparticles[*iter2].pt();
+      if(pTsum==0) continue;
+      double factor=FJparticles[iter->second].pt()/pTsum;
+      fastjet::PseudoJet corrected = fastjet::PseudoJet( 0, 0, 0, FJparticles[iter->second].m() );
+      for (vector<unsigned>::iterator iter2=chargedPatricles[iter->first].begin(); iter2!=chargedPatricles[iter->first].end(); ++iter2){
+	  corrected += fastjet::PseudoJet( FJparticles[*iter2].px()*factor, FJparticles[*iter2].py()*factor, FJparticles[*iter2].pz()*factor, FJparticles[*iter2].E()*factor );
+      }
+      FJparticles[iter->second]=corrected;
+    }
+    fastjet::JetDefinition jet_def(fastjet::cambridge_algorithm, 2.0);
+    fastjet::ClusterSequence clust_seq(FJparticles, jet_def);
+    vector<fastjet::PseudoJet> inclusive_jets = fastjet::sorted_by_pt(clust_seq.inclusive_jets(0));
+    if(inclusive_jets.size()==0) return 0;
+    double jetCorrection=object->pt()/inclusive_jets[0].pt();
+    fastjet::Pruner pruner(fastjet::cambridge_algorithm, 0.1, 0.5);
+    return pruner(inclusive_jets[0]).m()*jetCorrection;
+}
+
 float JetHelper::genTau21PUcorrected(double minPt, bool CHS) const
 {
     double vertexZ=-1000;
@@ -247,17 +411,17 @@ float JetHelper::genTau21PUcorrected(double minPt, bool CHS) const
     //gen_sub.use_common_bge_for_rho_and_rhom();
     fastjet::JetDefinition jet_def(fastjet::cambridge_algorithm, 2.0);
     fastjet::ClusterSequenceArea clust_seq(FJparticles, jet_def, area_def);
-    vector<fastjet::PseudoJet> incluisve_jets = clust_seq.inclusive_jets(0);
+    vector<fastjet::PseudoJet> inclusive_jets = clust_seq.inclusive_jets(0);
     NSubjettinessRatio tau21(2);
     
     // validation
     //std::cerr << "rho" << bge.rho() << std::endl;
     //fastjet::ClusterSequenceArea clust_seq_hard(HARDparticles, jet_def, area_def);
     //vector<fastjet::PseudoJet> hard_jets = clust_seq_hard.inclusive_jets(0);
-    //std::cerr << "hard" << (hard_jets[hard_jets.size()-1].pt()) << " orig" << (incluisve_jets[incluisve_jets.size()-1].pt()) << " corrected" << (subtractor(incluisve_jets[incluisve_jets.size()-1]).pt()) << std::endl;
-    //std::cerr << "orig" << tau21(incluisve_jets[incluisve_jets.size()-1]) << " corrected" << gen_sub(tau21, incluisve_jets[incluisve_jets.size()-1]) << std::endl;
+    //std::cerr << "hard" << (hard_jets[hard_jets.size()-1].pt()) << " orig" << (inclusive_jets[inclusive_jets.size()-1].pt()) << " corrected" << (subtractor(inclusive_jets[inclusive_jets.size()-1]).pt()) << std::endl;
+    //std::cerr << "orig" << tau21(inclusive_jets[inclusive_jets.size()-1]) << " corrected" << gen_sub(tau21, inclusive_jets[inclusive_jets.size()-1]) << std::endl;
 
-    return gen_sub(tau21, incluisve_jets[incluisve_jets.size()-1]);
+    return gen_sub(tau21, inclusive_jets[inclusive_jets.size()-1]);
 }
 
 
@@ -279,9 +443,9 @@ float JetHelper::getC2beta(float beta) const
     if(FJparticles.size()<2) return -1;
     fastjet::JetDefinition jet_def(fastjet::cambridge_algorithm, 2.0);
     fastjet::ClusterSequence clust_seq(FJparticles, jet_def);
-    vector<fastjet::PseudoJet> incluisve_jets = clust_seq.inclusive_jets(0);
+    vector<fastjet::PseudoJet> inclusive_jets = clust_seq.inclusive_jets(0);
     contrib::EnergyCorrelatorRatio C2beta(2,beta,contrib::EnergyCorrelator::pt_R);
-    return C2beta(incluisve_jets[0]);
+    return C2beta(inclusive_jets[0]);
 }
 
 float JetHelper::getGenC2beta(float beta, bool CHS) const
@@ -298,9 +462,9 @@ float JetHelper::getGenC2beta(float beta, bool CHS) const
     if(FJparticles.size()<2) return -1;
     fastjet::JetDefinition jet_def(fastjet::cambridge_algorithm, 2.0);
     fastjet::ClusterSequence clust_seq(FJparticles, jet_def);
-    vector<fastjet::PseudoJet> incluisve_jets = clust_seq.inclusive_jets(0);
+    vector<fastjet::PseudoJet> inclusive_jets = clust_seq.inclusive_jets(0);
     contrib::EnergyCorrelatorRatio C2beta(2,beta,contrib::EnergyCorrelator::pt_R);
-    return C2beta(incluisve_jets[0]);
+    return C2beta(inclusive_jets[0]);
 }
 
 float JetHelper::getJetCharge(float kappa) const
