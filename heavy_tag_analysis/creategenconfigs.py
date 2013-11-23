@@ -2,9 +2,9 @@ import os
 
 signals=["WprimeToWZ","RSGravitonToWW_kMpl01","RSGravitonToZZ_kMpl01","QstarToQW","QstarToQZ"]
 signalMasses={}
-signalMasses["WprimeToWZ"]=[500,1000,1500,2000,2500,3000,3500,4000,4500]
-signalMasses["RSGravitonToWW_kMpl01"]=[500,1000,1500,2000,2500,3000,3500,4000,4500]
-signalMasses["RSGravitonToZZ_kMpl01"]=[500,1000,1500,2000,2500,3000,3500,4000,4500]
+signalMasses["WprimeToWZ"]=[500,1000,1500,1700,1800,1900,2000,2500,3000,3500,4000,4500]
+signalMasses["RSGravitonToWW_kMpl01"]=[500,1000,1500,1700,1800,1900,2000,2500,3000,3500,4000,4500]
+signalMasses["RSGravitonToZZ_kMpl01"]=[500,1000,1500,1700,1800,1900,2000,2500,3000,3500,4000,4500]
 signalMasses["QstarToQW"]=[500,1000,1500,2000,2500,3000,3500,4000,4500,5000,5500,6000,6500,7000,7500]
 signalMasses["QstarToQZ"]=[500,1000,1500,2000,2500,3000,3500,4000,4500,5000,5500,6000,6500,7000,7500]
 
@@ -19,7 +19,7 @@ import FWCore.ParameterSet.Config as cms
 source = cms.Source("EmptySource")
 
 generator = cms.EDFilter("Pythia8GeneratorFilter",
-	comEnergy = cms.double(8000.0),
+	comEnergy = cms.double(13000.0),
 	crossSection = cms.untracked.double(1e10),
 	filterEfficiency = cms.untracked.double(1),
 	maxEventsToPrint = cms.untracked.int32(0),

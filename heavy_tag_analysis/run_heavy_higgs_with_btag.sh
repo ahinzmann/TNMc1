@@ -1,0 +1,2 @@
+higgs_tagged_dijet_analysis_with_btag data/fileList_RadionToHHTo4B_M-1000_TuneZ2star_8TeV-madgraph_Summer12_DR53X-PU_S10_START53_V7C-v1_AODSIM_V5_B_NTUPLE_Aug5_grid.txt dijetWtag_Moriond_HHPy61000.root > dijetWtag_Moriond_HHPy61000.log 
+sleep 2
