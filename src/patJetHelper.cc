@@ -9,6 +9,8 @@
 
 #include "DataFormats/ParticleFlowReco/interface/PFBlockFwd.h"
 #include "DataFormats/ParticleFlowReco/interface/PFBlock.h"
+#include "DataFormats/ParticleFlowReco/interface/PFClusterFwd.h"
+#include "DataFormats/ParticleFlowReco/interface/PFCluster.h"
 
 #include <fastjet/PseudoJet.hh>
 #include "Njettiness.hh"
@@ -333,7 +335,7 @@ float JetHelper::getCorrectedPrunedJetMass() const
 {
     vector<fastjet::PseudoJet> FJparticles;
     map<unsigned,unsigned> neutralHadrons;
-    map<unsigned,vector<unsigned> > chargedPatricles;
+    map<unsigned,vector<unsigned> > chargedParticles;
     for (unsigned k =0; k < object->getPFConstituents().size(); k++)
     {
        const reco::PFCandidate *p = object->getPFConstituent(k).get();
@@ -349,20 +351,60 @@ float JetHelper::getCorrectedPrunedJetMass() const
          if(p->pdgId()==130) //neutral hadrons
            neutralHadrons[block]=k;
          if(p->charge()!=0) //charge particles
-           chargedPatricles[block].push_back(k);
+           chargedParticles[block].push_back(k);
        }
     }
     for (map<unsigned,unsigned>::iterator iter=neutralHadrons.begin(); iter!=neutralHadrons.end(); ++iter){
       double pTsum=0;
-      for (vector<unsigned>::iterator iter2=chargedPatricles[iter->first].begin(); iter2!=chargedPatricles[iter->first].end(); ++iter2)
+      for (vector<unsigned>::iterator iter2=chargedParticles[iter->first].begin(); iter2!=chargedParticles[iter->first].end(); ++iter2)
         pTsum+=FJparticles[*iter2].pt();
       if(pTsum==0) continue;
       double factor=FJparticles[iter->second].pt()/pTsum;
       fastjet::PseudoJet corrected = fastjet::PseudoJet( 0, 0, 0, FJparticles[iter->second].m() );
-      for (vector<unsigned>::iterator iter2=chargedPatricles[iter->first].begin(); iter2!=chargedPatricles[iter->first].end(); ++iter2){
+      for (vector<unsigned>::iterator iter2=chargedParticles[iter->first].begin(); iter2!=chargedParticles[iter->first].end(); ++iter2){
 	  corrected += fastjet::PseudoJet( FJparticles[*iter2].px()*factor, FJparticles[*iter2].py()*factor, FJparticles[*iter2].pz()*factor, FJparticles[*iter2].E()*factor );
       }
       FJparticles[iter->second]=corrected;
+    }
+    fastjet::JetDefinition jet_def(fastjet::cambridge_algorithm, 2.0);
+    fastjet::ClusterSequence clust_seq(FJparticles, jet_def);
+    vector<fastjet::PseudoJet> inclusive_jets = fastjet::sorted_by_pt(clust_seq.inclusive_jets(0));
+    if(inclusive_jets.size()==0) return 0;
+    double jetCorrection=object->pt()/inclusive_jets[0].pt();
+    fastjet::Pruner pruner(fastjet::cambridge_algorithm, 0.1, 0.5);
+    return pruner(inclusive_jets[0]).m()*jetCorrection;
+}
+
+float JetHelper::getSplitBlockPrunedJetMass() const
+{
+    vector<fastjet::PseudoJet> FJparticles;
+    map<unsigned,vector<fastjet::PseudoJet> > hcalClusters;
+    for (unsigned k =0; k < object->getPFConstituents().size(); k++)
+    {
+       const reco::PFCandidate *p = object->getPFConstituent(k).get();
+       if(!p) continue;
+       FJparticles.push_back( fastjet::PseudoJet( p->px(), p->py(), p->pz(), p->energy() ) );
+       for (unsigned j =0; j < p->elementsInBlocks().size(); j++)
+       {
+         if(p->pdgId()==130) //hadrons
+	 {
+	   const reco::PFBlockElement* element = & p->elementsInBlocks()[j].first->elements()[p->elementsInBlocks()[j].second];
+	   if(element->type()==5)
+             hcalClusters[k].push_back( fastjet::PtYPhiM( element->clusterRef()->pt(), element->clusterRef()->eta(), element->clusterRef()->phi(), 0 ) );
+	 }
+       }
+    }
+    for (map<unsigned,vector<fastjet::PseudoJet> >::iterator iter=hcalClusters.begin(); iter!=hcalClusters.end(); ++iter){
+      double pTsum=0;
+      for (vector<fastjet::PseudoJet>::iterator iter2=iter->second.begin(); iter2!=iter->second.end(); ++iter2)
+        pTsum+=iter2->pt();
+      if(pTsum==0) continue;
+      double factor=FJparticles[iter->first].pt()/pTsum;
+      fastjet::PseudoJet corrected;
+      for (vector<fastjet::PseudoJet>::iterator iter2=iter->second.begin(); iter2!=iter->second.end(); ++iter2) {
+	  corrected += fastjet::PseudoJet( iter2->px()*factor, iter2->py()*factor, iter2->pz()*factor, iter2->E()*factor );
+      }
+      FJparticles[iter->first]=corrected;
     }
     fastjet::JetDefinition jet_def(fastjet::cambridge_algorithm, 2.0);
     fastjet::ClusterSequence clust_seq(FJparticles, jet_def);

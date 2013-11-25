@@ -258,6 +258,7 @@ int main(int argc, char** argv)
   stream.select("patJetHelper_selectedPatJetsCA8CHSwithQjets.getPrunedJetMass", jethelperCA8_prunedjetmass);
   stream.select("patJetHelper_selectedPatJetsCA8CHSwithQjets.getCorrectedPrunedJetMass", jethelperCA8_correctedprunedjetmass);
   stream.select("patJetHelper_selectedPatJetsCA8CHSwithQjets.getTrackJetMass", jethelperCA8_trackjetmass);
+  stream.select("patJetHelper_selectedPatJetsCA8CHSwithQjets.getSplitBlockPrunedJetMass", jethelperCA8_splitblockprunedjetmass);
   stream.select("patJetHelper_selectedPatJetsCA8CHSwithQjets.nConstituents", jethelperCA8_nConstituents);
   stream.select("patJetHelper_selectedPatJetsCA8CHSwithQjets.partonFlavour", jethelperCA8_partonFlavour);
   stream.select("patJetHelper_selectedPatJetsCA8CHSwithQjets.chargedEmEnergyFraction", jethelperCA8_chargedEmEnergyFraction);
@@ -570,6 +571,7 @@ int main(int argc, char** argv)
   dijetWtag->Branch("Jet1PrunedMass",&jethelperCA8_prunedjetmass[0],"Jet1PrunedMass/D");
   dijetWtag->Branch("Jet1CorrectedPrunedMass",&jethelperCA8_correctedprunedjetmass[0],"Jet1CorrectedPrunedMass/D");
   dijetWtag->Branch("Jet1TrackMass",&jethelperCA8_trackjetmass[0],"Jet1TrackMass/D");
+  dijetWtag->Branch("Jet1SplitBlockPrunedMass",&jethelperCA8_splitblockprunedjetmass[0],"Jet1SplitBlockPrunedMass/D");
   dijetWtag->Branch("Jet1CHF",&jethelperCA8_chargedHadronEnergyFraction[0],"Jet1CHF/F");
   dijetWtag->Branch("Jet1NHF",&jethelperCA8_neutralHadronEnergyFraction[0],"Jet1NHF/F");
   dijetWtag->Branch("Jet1MassSubjet",&Jet1MassSubjet,"Jet1MassSubjet/D");

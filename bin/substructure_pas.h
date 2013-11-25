@@ -174,6 +174,7 @@ std::vector<double>	jethelperCA8_mass(10,0);
 std::vector<double>	jethelperCA8_prunedjetmass(10,0);
 std::vector<double>	jethelperCA8_correctedprunedjetmass(10,0);
 std::vector<double>	jethelperCA8_trackjetmass(10,0);
+std::vector<double>	jethelperCA8_splitblockprunedjetmass(10,0);
 std::vector<int>	jethelperCA8_nConstituents(10,0);
 std::vector<int>	jethelperCA8_partonFlavour(10,0);
 std::vector<float>	jethelperCA8_chargedEmEnergyFraction(10,0);

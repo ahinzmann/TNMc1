@@ -838,6 +838,10 @@ int main(int argc, char** argv)
   double Jet0daughter1_pt;
   double Jet1daughter0_pt;
   double Jet1daughter1_pt;
+  double Jet0daughter0_eta;
+  double Jet0daughter1_eta;
+  double Jet1daughter0_eta;
+  double Jet1daughter1_eta;
 
 
 TTree *Fullmassspectrum = new TTree("Fullmassspectrum", "Fullmassspectrum");
@@ -846,6 +850,10 @@ Fullmassspectrum->Branch("Jet0daughter0_pt", &Jet0daughter0_pt, "Jet0daughter0_p
 Fullmassspectrum->Branch("Jet0daughter1_pt", &Jet0daughter1_pt, "Jet0daughter1_pt/D");
 Fullmassspectrum->Branch("Jet1daughter0_pt", &Jet1daughter0_pt, "Jet1daughter0_pt/D");
 Fullmassspectrum->Branch("Jet1daughter1_pt", &Jet1daughter1_pt, "Jet1daughter1_pt/D");
+Fullmassspectrum->Branch("Jet0daughter0_eta", &Jet0daughter0_eta, "Jet0daughter0_eta/D");
+Fullmassspectrum->Branch("Jet0daughter1_eta", &Jet0daughter1_eta, "Jet0daughter1_eta/D");
+Fullmassspectrum->Branch("Jet1daughter0_eta", &Jet1daughter0_eta, "Jet1daughter0_eta/D");
+Fullmassspectrum->Branch("Jet1daughter1_eta", &Jet1daughter1_eta, "Jet1daughter1_eta/D");
 
 Fullmassspectrum->Branch("Jet1CA8Nsub", &Jet1CA8Nsub, "Jet1CA8Nsub/D");
 Fullmassspectrum->Branch("Jet2CA8Nsub", &Jet2CA8Nsub, "Jet2CA8Nsub/D");
@@ -1257,6 +1265,11 @@ Threejet_analysis_AK5->Branch("Jet_NonFatVar_plus_SecondNonFatVar_AK5mass_pruned
 	Jet0daughter1_pt = jethelperCA8pruned_daughter_1_pt[0];
 	Jet1daughter0_pt = jethelperCA8pruned_daughter_0_pt[1];
 	Jet1daughter1_pt = jethelperCA8pruned_daughter_1_pt[1];
+
+	Jet0daughter0_eta = jethelperCA8pruned_daughter_0_eta[0];
+	Jet0daughter1_eta = jethelperCA8pruned_daughter_1_eta[0];
+	Jet1daughter0_eta = jethelperCA8pruned_daughter_0_eta[1];
+	Jet1daughter1_eta = jethelperCA8pruned_daughter_1_eta[1];
 
 
 	Fullmassspectrum->Fill();

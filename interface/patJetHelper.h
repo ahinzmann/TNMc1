@@ -241,6 +241,7 @@ namespace pat
         float getGenCaloJetMassPFcorrect05() const { return getGenCaloJetMass(0.5,true,true); }
         float getGenTrackJetMass() const;
         float getCorrectedPrunedJetMass() const;
+        float getSplitBlockPrunedJetMass() const;
         float getPrunedJetMass() const;
         float getTrackJetMass() const;
 

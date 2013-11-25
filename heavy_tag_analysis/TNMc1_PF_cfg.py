@@ -65,7 +65,9 @@ process.source = datasetToSource(
 
 process.source.fileNames=cms.untracked.vstring('file:///afs/cern.ch/user/h/hinzmann/workspace/RSGravitonToWW_kMpl01_M-2500_Tune23_8TeV-herwigpp-Summer12_DR53X-PU_S10_START53_V7A-v1-A25D0992-00C1-E211-8D70-E0CB4E29C4D8.root')
 if runPF:
-    process.source.fileNames=cms.untracked.vstring('file:///afs/cern.ch/user/h/hinzmann/workspace/RSGravitonToWW_kMpl01_M-2500_Tune23_8TeV-herwigpp-Summer12_DR53X-PU_S10_START53_V7A-v1-GENSIM-0454C808-0DBD-E211-886D-0025904886E6.root')
+    #process.source.fileNames=cms.untracked.vstring('file:///tmp/hinzmann/reco_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_L1Reco_RECO_PU_v2.root')
+    #process.source.fileNames=cms.untracked.vstring('file:///tmp/hinzmann/reco_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_L1Reco_RECO_PU_v2_noHCALcluster.root')
+    process.source.fileNames=cms.untracked.vstring('file:///tmp/hinzmann/reco_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_L1Reco_RECO_PU_v2_50PU.root')
 
 if runOnVVtuples:
     #process.load("ExoDiBosonResonances/EDBRCommon/datasets/summer12_WJetsPt100_cff")
@@ -113,9 +115,12 @@ if runOnVVtuples:
     process.demo.buffers.remove("edmEventHelperExtra")
 
 from CMGTools.Common.Tools.cmsswRelease import cmsswIs44X,cmsswIs52X
-process.load("Configuration.StandardSequences.GeometryDB_cff")
-process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
-process.load("Configuration.StandardSequences.MagneticField_38T_cff")
+#process.load("Configuration.StandardSequences.GeometryDB_cff")
+process.load('Configuration.StandardSequences.Services_cff')
+process.load('SimGeneral.MixingModule.mix_2012_Summer_50ns_PoissonOOTPU_cfi')
+process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
+process.load('Configuration.StandardSequences.MagneticField_38T_cff')
+process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 GT = None
 if runOnMC:
@@ -125,14 +130,6 @@ else:
 #    GT = 'GR_P_V39_AN3::All' # for Moriond data
     GT = 'FT_53_V21_AN4::All' # for Jan22ReReco data
 process.GlobalTag.globaltag = GT
-
-process.p = cms.Path()
-process.schedule = cms.Schedule(process.p)
-
-if runPF:
-     process.load("Configuration.StandardSequences.Reconstruction_cff")
-     process.p += process.reconstruction
-     #process.particleFlowClusterHCAL.nNeighbours=0
 
 #### AK5 CHS jets
 process.load('CMGTools.Common.PAT.PATCMG_cff')
@@ -356,9 +353,53 @@ process.load("CMGTools.RootTools.utils.vertexWeight.vertexWeights2012_cfi")
 
 print 'Global tag       : ', process.GlobalTag.globaltag
 
+process.p = cms.Path()
+process.schedule = cms.Schedule(process.p)
+
+#if runPF:
+#     process.load('Configuration.StandardSequences.Digi_cff')
+#     process.load('Configuration.StandardSequences.SimL1Emulator_cff')
+#     process.load('Configuration.StandardSequences.DigiToRaw_cff')
+#     process.load('Configuration.StandardSequences.RawToDigi_cff')
+#     process.load('Configuration.StandardSequences.L1Reco_cff')
+#     process.load('Configuration.StandardSequences.Reconstruction_cff')
+#     process.mix.input.fileNames = cms.untracked.vstring("root://eoscms//eos/cms/store/relval/CMSSW_5_3_6-START53_V14/RelValMinBias/GEN-SIM-DIGI-RAW-HLTDEBUG/v2/00000/746680C6-202A-E211-A6F7-001A9281174A.root",
+#           "root://eoscms//eos/cms/store/relval/CMSSW_5_3_6-START53_V14/RelValMinBias/GEN-SIM-DIGI-RAW-HLTDEBUG/v2/00000/8E0656B2-EB29-E211-B8CA-0025905822B6.root",
+#           "root://eoscms//eos/cms/store/relval/CMSSW_5_3_6-START53_V14/RelValMinBias/GEN-SIM-DIGI-RAW-HLTDEBUG/v2/00000/DC77FAB5-1F2A-E211-8A41-003048FF86CA.root")
+#     process.p1 = cms.Path(process.mix+process.doAllDigi+process.addPileupInfo)
+#     process.p2 = cms.Path(process.SimL1Emulator)
+#     process.p3 = cms.Path(process.DigiToRaw)
+#     process.p4 = cms.Path(process.RawToDigi)
+#     process.p5 = cms.Path(process.L1Reco)
+#     process.p6 = cms.Path(process.reconstruction)
+#     process.schedule = cms.Schedule(process.p1,process.p2,process.p3,process.p4,process.p5,process.p6,process.p)
+#     process.recoPFJets = cms.Sequence(process.kt6PFJets+process.ak5PFJets)
+#     from CMGTools.Common.PFVertexProducer_cfi import particleFlow
+#     process.pfvertex=particleFlow
+#     process.PATCMGVertexSequence = cms.Sequence(process.pfvertex)
+#     process.PATCMGSequence.remove(process.PATCMGElectronSequence)
+#     process.PATCMGSequence.remove(process.PATCMGPhotonSequence)
+#     process.pfPileUpIso.PFCandidates = cms.InputTag("particleFlowTmp")
+#     process.pfNoPileUpIso.bottomCollection = cms.InputTag("particleFlowTmp")
+#     process.elPFIsoDepositCharged.src = cms.InputTag("pfSelectedElectrons")
+#     process.elPFIsoDepositChargedAll.src = cms.InputTag("pfSelectedElectrons")
+#     process.elPFIsoDepositGamma.src = cms.InputTag("pfSelectedElectrons")
+#     process.elPFIsoDepositNeutral.src = cms.InputTag("pfSelectedElectrons")
+#     process.elPFIsoDepositPU.src = cms.InputTag("pfSelectedElectrons")
+#     process.muPFIsoDepositCharged.src = cms.InputTag("muons1stStep")
+#     process.muPFIsoDepositChargedAll.src = cms.InputTag("muons1stStep")
+#     process.muPFIsoDepositGamma.src = cms.InputTag("muons1stStep")
+#     process.muPFIsoDepositNeutral.src = cms.InputTag("muons1stStep")
+#     process.muPFIsoDepositPU.src = cms.InputTag("muons1stStep")
+#     process.ak5JetTracksAssociatorAtVertex.jets = cms.InputTag("ak5CaloJets")
+#     process.softElectronTagInfos.jets = cms.InputTag("ak5CaloJets")
+#     process.softMuonTagInfos.jets = cms.InputTag("ak5CaloJets")
+#     process.ak5PFJetTracksAssociatorAtVertex.jets = cms.InputTag("ak5PFJets")
+#     ### MODIFY PF ALGORITHM
+#     #process.particleFlowClusterHCAL.nNeighbours=0
+
 if runPATCMG:
   process.load('CMGTools.Common.PAT.addFilterPaths_cff')
-  process.p = cms.Path()
   process.p += process.PATCMGSequence
   process.p += process.PATCMGJetCHSSequence
   if runOnMC:
@@ -366,16 +407,12 @@ if runPATCMG:
   if not runOnMC:
     process.demo.buffers.remove('edmTriggerResultsHelper1')
   from CMGTools.Common.PAT.patCMGSchedule_cff import getSchedule
+  #if not runPF:
   process.schedule = getSchedule(process, runOnMC, False)
   if runOnMC:
       process.metNoiseCleaningPath.remove(process.hcalfilter)
       process.trackIsolationMakerFilterPath.remove(process.trackIsolationFilter)
   del process.boolToIntSequence
-
-if runPF:
-    process.p.remove(process.cmgL1TriggerObject)
-    process.p.remove(process.cmgL1TriggerObjectSel)
-    process.p.remove(process.cmgL1TriggerObjectCount)
 
 process.tnmc1 = cms.Sequence(process.goodOfflinePrimaryVertices)
 process.tnmc1 += process.razorMJObjectSequence
@@ -439,7 +476,7 @@ process.p.visit(v)
 
 if writePatTuple:
   process.out = cms.OutputModule("PoolOutputModule",
-                               fileName = cms.untracked.string('/tmp/hinzmann/patTuple.root'),
+                               fileName = cms.untracked.string('/tmp/hinzmann/patTuple_50PU.root'),
                                # save only events passing the full path
                                SelectEvents   = cms.untracked.PSet( SelectEvents = cms.vstring('p') ),
                                # save PAT Layer 1 output; you need a '*' to
@@ -449,4 +486,4 @@ if writePatTuple:
   process.outpath = cms.EndPath(process.out)
   process.schedule.append(process.outpath)
 
-process.demo.ntupleName=cms.untracked.string("/tmp/hinzmann/ntuple_rerunPF.root")
+process.demo.ntupleName=cms.untracked.string("/tmp/hinzmann/ntuple_rerunPF_50PU.root")
