@@ -52,7 +52,7 @@ process.FEVTSIMoutput = cms.OutputModule("PoolOutputModule",
     splitLevel = cms.untracked.int32(0),
     eventAutoFlushCompressedSize = cms.untracked.int32(5242880),
     outputCommands = process.FEVTSIMEventContent.outputCommands,
-    fileName = cms.untracked.string('/tmp/hinzmann/reco_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_L1Reco_RECO_PU_v2_modHCALcluster.root'),
+    fileName = cms.untracked.string('/tmp/hinzmann/reco_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_L1Reco_RECO_PU_v2_corHCALcluster.root'),
     dataset = cms.untracked.PSet(
         filterName = cms.untracked.string(''),
         dataTier = cms.untracked.string('')
@@ -71,8 +71,9 @@ process.mix.input.fileNames = cms.untracked.vstring("root://eoscms//eos/cms/stor
 #process.mix.input.nbPileupEvents.probValue = cms.vdouble(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
 
 ### MODIFY PF ALGORITHM
-process.particleFlowClusterHCAL.nNeighbours=8
-process.particleFlowClusterHCAL.posCalcNCrystal=9
+process.particleFlowClusterHCAL.nNeighbours=4 #mod=8, red=4, cor=4
+process.particleFlowClusterHCAL.posCalcNCrystal=5 #mod=9, red=-1, cor=5
+process.particleFlowClusterHCAL.useCornerCells=False #cor=False
 
 # Path and EndPath definitions
 process.digitisation_step = cms.Path(process.pdigi)
