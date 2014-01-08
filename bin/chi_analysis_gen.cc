@@ -210,6 +210,12 @@ int main(int argc, char** argv)
   TCanvas c1("c1","c1",200,200);
   TH1F* h1=new TH1F("dijet_mass","M_{jj}",76,400,8000);
   h1->Sumw2();
+  TH1F* h1chi1=new TH1F("dijet_mass_chi1","M_{jj}",76,400,8000);
+  h1chi1->Sumw2();
+  TH1F* h1chi6=new TH1F("dijet_mass_chi6","M_{jj}",76,400,8000);
+  h1chi6->Sumw2();
+  TH1F* h1chi11=new TH1F("dijet_mass_chi11","M_{jj}",76,400,8000);
+  h1chi11->Sumw2();
   TH1F* h1_ref=new TH1F("dijet_mass_ref","M_{jj}",76,400,8000);
   h1_ref->Sumw2();
   TH1F* h1_trig=new TH1F("dijet_mass_trig","M_{jj}",76,400,8000);
@@ -483,6 +489,19 @@ for (int isrc = 0; isrc < nsrc; isrc++) {
 	      weight=geneventinfoproduct_weight;
 
           h1->Fill(DijetMass, weight);
+
+	  if (exp(fabs(jethelper3_rapidity[0]-jethelper3_rapidity[1]))<6)
+	  {
+             h1chi1->Fill(DijetMass, weight);
+          }
+	   if((exp(fabs(jethelper3_rapidity[0]-jethelper3_rapidity[1]))>=6)&&(exp(fabs(jethelper3_rapidity[0]-jethelper3_rapidity[1]))<11))
+	  {
+             h1chi6->Fill(DijetMass, weight);
+          }
+	  if (exp(fabs(jethelper3_rapidity[0]-jethelper3_rapidity[1]))>=11)
+	  {
+             h1chi11->Fill(DijetMass, weight);
+          }
 	  
 	  if ((triggerresultshelper_HLT_HT450_v1>0)||
 	      (triggerresultshelper_HLT_HT450_v2>0)||
@@ -669,6 +688,9 @@ for (int isrc = 0; isrc < nsrc; isrc++) {
   std::cout << "done" << std::endl;
 
   h1->Write();
+  h1chi1->Write();
+  h1chi6->Write();
+  h1chi11->Write();
   h1->Draw("histe");
   gPad->SetLogy(true);
   c1.SaveAs((cmdline.outputfilename.substr(0,cmdline.outputfilename.size()-5)+"_mass.pdf").c_str());

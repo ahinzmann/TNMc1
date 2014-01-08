@@ -26,7 +26,7 @@ TGaxis.SetMaxDigits(3)
 if __name__ == '__main__':
 
  theory=False
- runSet=2
+ runSet=3
 
  if runSet==1:
   gStyle.SetPalette(1)

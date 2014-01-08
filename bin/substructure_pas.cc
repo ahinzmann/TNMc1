@@ -550,6 +550,7 @@ int main(int argc, char** argv)
   double Gendeta=0;
   
   int genWcharge=0;
+  int genWhadronic=0;
   int Jet1quarkgluon=0;
   double costheta1=0;
   double costheta2=0;
@@ -603,6 +604,7 @@ int main(int argc, char** argv)
   dijetWtag->Branch("Jet1Pt2",&jethelperCA8_Pt2[0],"Jet1Pt2/D");
 
   dijetWtag->Branch("Jet1genWcharge",&genWcharge,"Jet1genWcharge/I");
+  dijetWtag->Branch("Jet1genWhadronic",&genWhadronic,"Jet1genWhadronic/I");
   dijetWtag->Branch("Jet1quarkgluon",&Jet1quarkgluon,"Jet1quarkgluon/I");
   dijetWtag->Branch("costheta1",&costheta1,"costheta1/D");
   dijetWtag->Branch("costheta2",&costheta2,"costheta2/D");
@@ -938,15 +940,22 @@ SubJet1.SetPtEtaPhiM(jethelperCA8pruned_daughter_0_pt[prunedJetIndex],jethelperC
 	  */
 	  
 	  genWcharge=0;
+	  genWhadronic=1;
 	  Jet1quarkgluon=0;
           for(int i=0;i<ngenparticlehelper;++i)
 	  {
 //if((DeltaRfun(genparticlehelper_eta[i],jethelperCA8_eta[0],genparticlehelper_phi[i],jethelperCA8_phi[0])<0.2))
 //   std::cerr << genparticlehelper_pdgId[i] << "," << genparticlehelper_charge[i] << "," << DeltaRfun(genparticlehelper_eta[i],jethelperCA8_eta[0],genparticlehelper_phi[i],jethelperCA8_phi[0]) << std::endl;
-	      if((abs(genparticlehelper_pdgId[i])==24)&&(genparticlehelper_charge[i]<0)&&(DeltaRfun(genparticlehelper_eta[i],jethelperCA8_eta[0],genparticlehelper_phi[i],jethelperCA8_phi[0])<0.2))
+	      if((abs(genparticlehelper_pdgId[i])==24)&&(genparticlehelper_charge[i]<0)&&(DeltaRfun(genparticlehelper_eta[i],jethelperCA8_eta[0],genparticlehelper_phi[i],jethelperCA8_phi[0])<0.2)) {
                   genWcharge=-1;
-if((abs(genparticlehelper_pdgId[i])==24)&&(genparticlehelper_charge[i]>0)&&(DeltaRfun(genparticlehelper_eta[i],jethelperCA8_eta[0],genparticlehelper_phi[i],jethelperCA8_phi[0])<0.2))
+		  if(genparticlehelper_pdgId[genparticlehelper_firstDaughter[i]]>=11)
+		     genWhadronic=0;
+		  }
+if((abs(genparticlehelper_pdgId[i])==24)&&(genparticlehelper_charge[i]>0)&&(DeltaRfun(genparticlehelper_eta[i],jethelperCA8_eta[0],genparticlehelper_phi[i],jethelperCA8_phi[0])<0.2)) {
                   genWcharge=1;
+		  if(genparticlehelper_pdgId[genparticlehelper_firstDaughter[i]]>=11)
+		     genWhadronic=0;
+		  }
 if((abs(genparticlehelper_pdgId[i])<=6)&&(genparticlehelper_status[i]==3)&&(DeltaRfun(genparticlehelper_eta[i],jethelperCA8_eta[0],genparticlehelper_phi[i],jethelperCA8_phi[0])<0.2))
                   Jet1quarkgluon=1;
 if(((abs(genparticlehelper_pdgId[i])==9)||(abs(genparticlehelper_pdgId[i])==21))&&(genparticlehelper_status[i]==3)&&(DeltaRfun(genparticlehelper_eta[i],jethelperCA8_eta[0],genparticlehelper_phi[i],jethelperCA8_phi[0])<0.2))

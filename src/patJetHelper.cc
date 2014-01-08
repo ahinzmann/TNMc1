@@ -11,6 +11,7 @@
 #include "DataFormats/ParticleFlowReco/interface/PFBlock.h"
 #include "DataFormats/ParticleFlowReco/interface/PFClusterFwd.h"
 #include "DataFormats/ParticleFlowReco/interface/PFCluster.h"
+#include "DataFormats/ParticleFlowReco/interface/PFRecHit.h"
 
 #include <fastjet/PseudoJet.hh>
 #include "Njettiness.hh"
@@ -330,7 +331,140 @@ float JetHelper::getTrackJetMass() const
     fastjet::Pruner pruner(fastjet::cambridge_algorithm, 0.1, 0.5);
     return pruner(inclusive_jets[0]).m()*jetCorrection;
 }
+/*
+// shortened from #include "RecoParticleFlow/PFClusterProducer/interface/PFClusterAlgo.h"
+void resetClusterPosition(reco::PFCluster& cluster) {
 
+  std::vector< std::pair< DetId, float > > hits_and_fracts;
+
+  cluster.setPosition(math::XYZPoint(0,0,0));
+
+  double normalize = 0;
+
+  // calculate average layer  ---------- //
+
+  // double layer = 0;
+  map <PFLayer::Layer, double> layers; 
+
+  // loop over pairs to find layer with max energy          
+  double Emax = 0.;
+  PFLayer::Layer layer = PFLayer::NONE;
+  for (map<PFLayer::Layer, double>::iterator it = layers.begin();
+       it != layers.end(); ++it) {
+    double e = it->second;
+    if(e > Emax){ 
+      Emax = e; 
+      layer = it->first;
+    }
+  }
+
+  //setlayer here
+  cluster.setLayer( layer ); // take layer with max energy
+
+  double p1 =  0.08;
+
+  // calculate uncorrected cluster position --------------------------------
+
+  math::XYZPoint clusterposxyz;           // idem, xyz coord 
+  math::XYZPoint firstrechitposxyz;       // pos of the rechit with highest E
+
+  double maxe = -9999;
+  double x = 0;
+  double y = 0;
+  double z = 0;
+  
+  for (unsigned ic=0; ic<cluster.recHitFractions().size(); ic++ ) {
+    
+    const reco::PFRecHit& rh = *(cluster.recHitFractions()[ic].recHitRef());
+
+    hits_and_fracts.push_back(std::make_pair(DetId(rh.detId()),
+				     cluster.recHitFractions()[ic].fraction()));
+
+    double fraction = hits_and_fracts.back().second;
+    double recHitEnergy = rh.energy() * fraction;
+    double norm = fraction < 1E-9 ? 0. : max(0., log(recHitEnergy/p1));
+        
+    const math::XYZPoint& rechitposxyz = rh.position();
+    
+    if( recHitEnergy > maxe ) {
+      firstrechitposxyz = rechitposxyz;
+      maxe = recHitEnergy;
+    }
+
+    x += rechitposxyz.X() * norm;
+    y += rechitposxyz.Y() * norm;
+    z += rechitposxyz.Z() * norm;
+    
+    normalize += norm;
+  }
+
+  // normalize uncorrected position
+
+  if( normalize < 1e-9 ) {
+    //    cerr<<"--------------------"<<endl;
+    //    cerr<<(*this)<<endl;
+    cout << "Watch out : cluster too far from its seeding cell, set to 0,0,0" << endl;
+    clusterposxyz.SetCoordinates(0,0,0);
+    return;
+  }
+  else {
+    x /= normalize;
+    y /= normalize; 
+    z /= normalize; 
+
+    clusterposxyz.SetCoordinates( x, y, z);
+
+  }  
+
+  cluster.setPosition(clusterposxyz);
+  cluster.calculatePositionREP();
+
+}
+
+
+// RECALCULATE CLUSTER POSITIONS
+float JetHelper::getCorrectedPrunedJetMass() const
+{
+    vector<fastjet::PseudoJet> FJparticles;
+    for (unsigned k =0; k < object->getPFConstituents().size(); k++)
+    {
+       const reco::PFCandidate *p = object->getPFConstituent(k).get();
+       if(!p) continue;
+       FJparticles.push_back( fastjet::PseudoJet( p->px(), p->py(), p->pz(), p->energy() ) );
+       for (unsigned j =0; j < p->elementsInBlocks().size(); j++)
+       {
+	   const reco::PFBlockElement* element = & p->elementsInBlocks()[j].first->elements()[p->elementsInBlocks()[j].second];
+	   if((element->type()==4)) //ECAL clusters
+	   {
+	     reco::PFCluster cluster = *element->clusterRef();
+	     fastjet::PseudoJet originalClusterVector = fastjet::PtYPhiM( cluster.pt()*p->ecalEnergy()/p->rawEcalEnergy(), cluster.eta(), cluster.phi(), 0 );
+	     resetClusterPosition(cluster);
+	     fastjet::PseudoJet recalibratedClusterVector = fastjet::PtYPhiM( cluster.pt()*p->ecalEnergy()/p->rawEcalEnergy(), cluster.eta(), cluster.phi(), 0 );
+             FJparticles[k]-=originalClusterVector;
+             FJparticles[k]+=recalibratedClusterVector;
+           }
+	   if((element->type()==5)) //HCAL clusters
+	   {
+	     reco::PFCluster cluster = *element->clusterRef();
+	     fastjet::PseudoJet originalClusterVector = fastjet::PtYPhiM( cluster.pt()*p->hcalEnergy()/p->rawHcalEnergy(), cluster.eta(), cluster.phi(), 0 );
+	     resetClusterPosition(cluster);
+	     fastjet::PseudoJet recalibratedClusterVector = fastjet::PtYPhiM( cluster.pt()*p->hcalEnergy()/p->rawHcalEnergy(), cluster.eta(), cluster.phi(), 0 );
+             FJparticles[k]-=originalClusterVector;
+             FJparticles[k]+=recalibratedClusterVector;
+           }
+       }
+    }
+    fastjet::JetDefinition jet_def(fastjet::cambridge_algorithm, 2.0);
+    fastjet::ClusterSequence clust_seq(FJparticles, jet_def);
+    vector<fastjet::PseudoJet> inclusive_jets = fastjet::sorted_by_pt(clust_seq.inclusive_jets(0));
+    if(inclusive_jets.size()==0) return 0;
+    double jetCorrection=object->pt()/inclusive_jets[0].pt();
+    fastjet::Pruner pruner(fastjet::cambridge_algorithm, 0.1, 0.5);
+    return pruner(inclusive_jets[0]).m()*jetCorrection;
+}
+
+*/
+// USE CHARGED PARTICLES TO ALIGN NEUTRAL DIRECTIONS
 float JetHelper::getCorrectedPrunedJetMass() const
 {
     vector<fastjet::PseudoJet> FJparticles;
@@ -375,10 +509,11 @@ float JetHelper::getCorrectedPrunedJetMass() const
     return pruner(inclusive_jets[0]).m()*jetCorrection;
 }
 
+
 float JetHelper::getSplitBlockPrunedJetMass() const
 {
     vector<fastjet::PseudoJet> FJparticles;
-    map<unsigned,vector<fastjet::PseudoJet> > hcalClusters;
+    map<unsigned,vector<fastjet::PseudoJet> > clusters;
     for (unsigned k =0; k < object->getPFConstituents().size(); k++)
     {
        const reco::PFCandidate *p = object->getPFConstituent(k).get();
@@ -386,18 +521,22 @@ float JetHelper::getSplitBlockPrunedJetMass() const
        FJparticles.push_back( fastjet::PseudoJet( p->px(), p->py(), p->pz(), p->energy() ) );
        for (unsigned j =0; j < p->elementsInBlocks().size(); j++)
        {
-         if(p->pdgId()==130) //hadrons
+         if(p->pdgId()==130) //neutral hadrons
 	 {
 	   const reco::PFBlockElement* element = & p->elementsInBlocks()[j].first->elements()[p->elementsInBlocks()[j].second];
-	   if(element->type()==5)
-             hcalClusters[k].push_back( fastjet::PtYPhiM( element->clusterRef()->pt(), element->clusterRef()->eta(), element->clusterRef()->phi(), 0 ) );
+	   if(element->type()==4) //ECAL clusters
+             clusters[k].push_back( fastjet::PtYPhiM( element->clusterRef()->pt()*(p->ecalEnergy()+p->hcalEnergy())/p->rawEcalEnergy(), element->clusterRef()->eta(), element->clusterRef()->phi(), 0 ) );
 	 }
        }
     }
-    for (map<unsigned,vector<fastjet::PseudoJet> >::iterator iter=hcalClusters.begin(); iter!=hcalClusters.end(); ++iter){
+    for (map<unsigned,vector<fastjet::PseudoJet> >::iterator iter=clusters.begin(); iter!=clusters.end(); ++iter){
       double pTsum=0;
-      for (vector<fastjet::PseudoJet>::iterator iter2=iter->second.begin(); iter2!=iter->second.end(); ++iter2)
+      //std::cout << FJparticles[iter->first].pt() << " = ";
+      for (vector<fastjet::PseudoJet>::iterator iter2=iter->second.begin(); iter2!=iter->second.end(); ++iter2) {
         pTsum+=iter2->pt();
+        //std::cout << iter2->pt() << "+";
+      }
+      //std::cout << std::endl;
       if(pTsum==0) continue;
       double factor=FJparticles[iter->first].pt()/pTsum;
       fastjet::PseudoJet corrected;

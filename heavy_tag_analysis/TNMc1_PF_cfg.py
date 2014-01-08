@@ -70,7 +70,8 @@ if runPF:
     #process.source.fileNames=cms.untracked.vstring('file:///tmp/hinzmann/reco_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_L1Reco_RECO_PU_v2_50PU.root')
     #process.source.fileNames=cms.untracked.vstring('file:///tmp/hinzmann/reco_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_L1Reco_RECO_PU_v2_modHCALcluster.root')
     #process.source.fileNames=cms.untracked.vstring('file:///tmp/hinzmann/reco_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_L1Reco_RECO_PU_v2_corHCALcluster.root')
-    process.source.fileNames=cms.untracked.vstring('file:///tmp/hinzmann/reco_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_L1Reco_RECO_PU_v2_redHCALcluster.root')
+    #process.source.fileNames=cms.untracked.vstring('file:///tmp/hinzmann/reco_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_L1Reco_RECO_PU_v2_redHCALcluster.root')
+    process.source.fileNames=cms.untracked.vstring('file:///tmp/hinzmann/reco_DIGI_L1_DIGI2RAW_HLT_RAW2DIGI_L1Reco_RECO_PU_v2_posCALcluster.root')
 
 if runOnVVtuples:
     #process.load("ExoDiBosonResonances/EDBRCommon/datasets/summer12_WJetsPt100_cff")
@@ -479,7 +480,7 @@ process.p.visit(v)
 
 if writePatTuple:
   process.out = cms.OutputModule("PoolOutputModule",
-                               fileName = cms.untracked.string('/tmp/hinzmann/patTuple_redHCALcluster.root'),
+                               fileName = cms.untracked.string('/tmp/hinzmann/patTuple_posCALcluster.root'),
                                # save only events passing the full path
                                SelectEvents   = cms.untracked.PSet( SelectEvents = cms.vstring('p') ),
                                # save PAT Layer 1 output; you need a '*' to
@@ -489,4 +490,4 @@ if writePatTuple:
   process.outpath = cms.EndPath(process.out)
   process.schedule.append(process.outpath)
 
-process.demo.ntupleName=cms.untracked.string("/tmp/hinzmann/ntuple_rerunPF_redHCALcluster.root")
+process.demo.ntupleName=cms.untracked.string("/tmp/hinzmann/ntuple_rerunPF_posCALcluster.root")

@@ -15,7 +15,7 @@ gStyle.SetPadTopMargin(0.08)
 gStyle.SetPadRightMargin(0.08)
 gStyle.SetMarkerSize(0.5)
 gStyle.SetHistLineWidth(1)
-#gStyle.SetStatFontSize(0.020)
+#gStyle.SetStatFontSize(0.020	
 gStyle.SetTitleSize(0.06, "XYZ")
 gStyle.SetLabelSize(0.05, "XYZ")
 gStyle.SetNdivisions(506, "XYZ")
@@ -25,7 +25,8 @@ TGaxis.SetMaxDigits(3)
 
 if __name__ == '__main__':
 
- runSet=31
+ runSet=33
+ resolution=True
  
  names = ["pt",
 	   "eta",
@@ -101,12 +102,15 @@ if __name__ == '__main__':
 
  if runSet==32:
   samples = ["substructure_pas_WWHppRePF2500.root",
+             #"substructure_pas_WWHppRePFecalhcalsplit2500.root",
              "substructure_pas_WWHppRePFnoHCALcluster2500.root",
              "substructure_pas_WWHppRePFredHCALcluster2500.root",
              ]
   names = ["mass",
+	   "mass_dr01",
 	   ]
-  plots = [("Jet1Mass","((abs(Jet1eta)<2.4)&&(deta<1.3)&&(DijetMass>2000)&&(Jet1pt>1100)&&(Jet1pt<1700)&&(abs(parton_dR_1)<0.14))","pruned jet mass (GeV)"),
+  plots = [("Jet1Mass","((abs(Jet1eta)<2.4)&&(deta<1.3)&&(DijetMass>2000)&&(Jet1pt>1100)&&(Jet1pt<1700))","pruned jet mass (GeV)"),
+           ("Jet1Mass","((abs(Jet1eta)<2.4)&&(deta<1.3)&&(DijetMass>2000)&&(Jet1pt>1100)&&(Jet1pt<1700)&&(abs(parton_dR_1)<0.14))","pruned jet mass (GeV)"),
            ]
   #colors=[4,4,4,2,2,2,6,6,6]
   #styles=[2,1,3,2,1,3,2,1,3]
@@ -115,6 +119,25 @@ if __name__ == '__main__':
   styles=[2,1,2,1,2,1]
   widths=[2,1,2,1,2,1]
   sets=["Jet1PrunedMass","Jet1SplitBlockPrunedMass"]#,"Jet1CorrectedPrunedMass"
+
+ if runSet==33:
+  samples = ["substructure_pas_WWHppRePFecalhcalsplit2500.root",
+             "substructure_pas_WWHppRePFredHCALcluster2500.root",
+             "substructure_pas_WWHppRePFposCALcluster2500.root",
+             ]
+  names = ["mass",
+	   "mass_dr01",
+	   ]
+  plots = [("Jet1Mass","((abs(Jet1eta)<2.4)&&(deta<1.3)&&(DijetMass>2000)&&(Jet1pt>1100)&&(Jet1pt<1700))","pruned jet mass (GeV)"),
+           ("Jet1Mass","((abs(Jet1eta)<2.4)&&(deta<1.3)&&(DijetMass>2000)&&(Jet1pt>1100)&&(Jet1pt<1700)&&(abs(parton_dR_1)<0.14))","pruned jet mass (GeV)"),
+           ]
+  colors=[4,4,4,2,2,2,6,6,6]
+  styles=[2,1,3,2,1,3,2,1,3]
+  widths=[2,1,1,2,1,1,2,1,1]
+  #colors=[4,4,2,2,6,6]
+  #styles=[2,1,2,1,2,1]
+  #widths=[2,1,2,1,2,1]
+  sets=["Jet1PrunedMass"]#,"Jet1SplitBlockPrunedMass","Jet1CorrectedPrunedMass"
 
  if runSet==4:
   samples = ["substructure_pas_WWHppPFg2500.root",
@@ -348,6 +371,9 @@ if __name__ == '__main__':
        hist.GetYaxis().SetRangeUser(0,75000)
        if "aftermass" in names[plots.index(plot)]:
            hist.GetYaxis().SetRangeUser(0,5000)
+    if resolution:
+       hist=TH1F(histname,histname,50,-100,100);
+       hist.GetYaxis().SetRangeUser(0,50000)
 
     if gen=="lowPU":
         variable,cutstring=plot[0],plot[1]+"&&(nPU<17)"
@@ -383,16 +409,23 @@ if __name__ == '__main__':
         variable,cutstring=plot[0],plot[1]+"&&(abs(parton_dR_1)>0.14)&&(abs(parton_dR_1)<0.28)"
     elif gen=="Dr10":
         variable,cutstring=plot[0],plot[1]+"&&(abs(parton_dR_1)>0.28)&&(abs(parton_dR_1)<1.0)"
-    elif "TrackMass" in gen or "CaloMass" in gen or "PrunedMass" in gen:
+    elif "TrackMass" in gen or "CaloMass" in gen or "PrunedMass" in gen or "UnGroomedMass" in gen:
         variable,cutstring=gen,plot[1].replace("Jet","GenJet").replace("DijetMass","GenDijetMass").replace("deta","Gendeta")
     elif gen=="Gen":
         variable,cutstring=gen+plot[0],plot[1].replace("Jet","GenJet").replace("DijetMass","GenDijetMass").replace("deta","Gendeta")
     else:
         variable,cutstring=gen+plot[0],plot[1]
     
+    #if "WW" in sample:
+    #  cutstring+="&&(Jet1genWhadronic==1)"
+    if resolution and gen=="Jet1PrunedMass":
+        variable+="-GenJet1Mass"
+    if resolution and gen=="Jet1UnGroomedMass":
+        variable+="-GenJet1UnGroomedMass"
+    
     print histname,variable,cutstring
     tree.Project(histname,variable,cutstring)
-    if runSet==32:
+    if runSet==32 or  runSet==33:
        hist.Rebin(2)
     if "QCD" in sample:
         originalIntegral[histname]=hist.Integral()
@@ -401,6 +434,8 @@ if __name__ == '__main__':
     hist.SetMarkerStyle(20)
     #hist.SetMarkerSize(2)
     hist.GetXaxis().SetTitle(plot[2])
+    if resolution:
+      hist.GetXaxis().SetTitle("(reco - gen) "+plot[2])
     hist.GetYaxis().SetTitle("Normalized Distribution")
     if "Run" in sample:
         integral=hist.Integral()
@@ -545,6 +580,16 @@ if __name__ == '__main__':
         legend.AddEntry(hist,"no HCAL cluster","l")
       elif runSet==32 and "PrunedMass" in gen and s==3:
         legend.AddEntry(hist,"modified HCAL cluster","l")
+      elif runSet==33 and "SplitBlockPrunedMass" in gen:
+        legend.AddEntry(hist," + split block","l")
+      elif runSet==33 and "CorrectedPrunedMass" in gen:
+        legend.AddEntry(hist," + improved PF","l")
+      elif runSet==33 and "PrunedMass" in gen and s==1:
+        legend.AddEntry(hist,"default PF clusters","l")
+      elif runSet==33 and "PrunedMass" in gen and s==2:
+        legend.AddEntry(hist,"mod. HCAL clusters","l")
+      elif runSet==33 and "PrunedMass" in gen and s==3:
+        legend.AddEntry(hist,"mod. ECAL+HCAL clusters","l")
       elif runSet==3 and "CorrectedPrunedMass" in gen:
         legend.AddEntry(hist,"reco PFv2","l")
       elif runSet<8 and "Track" in gen:
@@ -610,7 +655,7 @@ if __name__ == '__main__':
         legend.AddEntry(hist," + <PU>=22 + sim.","l")
     counter+=1
 
-  legend.SetTextSize(0.036)
+  legend.SetTextSize(0.03)
   legend.SetFillStyle(0)
   legend.Draw("same")
 
@@ -629,8 +674,8 @@ if __name__ == '__main__':
   legend2a.SetFillStyle(0)
   legend2a.Draw("same")
 
-  if runSet==31 or runSet==32:
-    legend2b=TLegend(0.17,0.7,0.5,0.75,"dR(partons) < 0.14")
+  if "parton_dR_1" in plot[1]:
+    legend2b=TLegend(0.17,0.7,0.5,0.75,"#DeltaR(partons) < 0.14")
     legend2b.SetTextSize(0.03)
     legend2b.SetFillStyle(0)
     legend2b.Draw("same")
